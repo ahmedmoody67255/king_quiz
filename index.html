@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>KiNG QUIZ 👑</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- START SCREEN -->
+
+  <div id="startScreen" class="screen">
+
+    <div class="crown">👑</div>
+
+    <h1>KiNG <span>QUIZ</span></h1>
+
+    <p class="subtitle">
+      Think Fast. Play Smart. Be The KiNG.
+    </p>
+
+    <div class="menu">
+
+      <button onclick="startGame('solo')">
+        👤 SOLO
+      </button>
+
+      <button onclick="showTwoPlayers()">
+        👥 2 PLAYERS
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- PLAYERS SCREEN -->
+
+  <div id="playersScreen" class="screen hidden">
+
+    <div class="game-logo">
+      👑 KiNG QUIZ
+    </div>
+
+    <h2>Who's Playing?</h2>
+
+    <input
+      id="player1"
+      type="text"
+      placeholder="Player 1 name"
+      maxlength="15"
+    >
+
+    <input
+      id="player2"
+      type="text"
+      placeholder="Player 2 name"
+      maxlength="15"
+    >
+
+    <button
+      class="main-btn"
+      onclick="startTwoPlayers()">
+      START GAME 🔥
+    </button>
+
+    <button
+      class="back-btn"
+      onclick="backHome()">
+      ← Back
+    </button>
+
+  </div>
+
+
+  <!-- CATEGORY SCREEN -->
+
+  <div id="categoryScreen" class="screen hidden">
+
+    <div class="game-logo">
+      👑 KiNG QUIZ
+    </div>
+
+    <h2>Choose Your Category</h2>
+
+    <div class="categories">
+
+      <button onclick="selectCategory('football')">
+        ⚽
+        <span>Football</span>
+      </button>
+
+      <button onclick="selectCategory('history')">
+        🏛️
+        <span>History</span>
+      </button>
+
+      <button onclick="selectCategory('geography')">
+        🌍
+        <span>Geography</span>
+      </button>
+
+      <button onclick="selectCategory('biology')">
+        🧬
+        <span>Biology</span>
+      </button>
+
+      <button onclick="selectCategory('love')">
+        ❤️
+        <span>Love</span>
+      </button>
+
+      <button onclick="selectCategory('english')">
+        🇬🇧
+        <span>English</span>
+      </button>
+
+      <button onclick="selectCategory('friends')">
+        😂
+        <span>Friends</span>
+      </button>
+
+      <button onclick="selectCategory('politics')">
+        🏛️
+        <span>Politics</span>
+      </button>
+
+      <button onclick="selectCategory('general')">
+        🧠
+        <span>General</span>
+      </button>
+
+      <button onclick="selectCategory('movies')">
+        🎬
+        <span>Movies</span>
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- QUIZ SCREEN -->
+
+  <div id="quizScreen" class="screen hidden">
+
+    <div class="quiz-top">
+
+      <div>
+        <small>PLAYER</small>
+        <strong id="currentPlayer">
+          Player 1
+        </strong>
+      </div>
+
+      <div class="score">
+        ⭐
+        <span id="score">
+          0
+        </span>
+      </div>
+
+    </div>
+
+
+    <div class="progress">
+
+      <div id="progressBar"></div>
+
+    </div>
+
+
+    <div class="question-number">
+      QUESTION
+      <span id="questionNumber">
+        1
+      </span>
+      / 10
+    </div>
+
+
+    <div class="timer">
+
+      ⏱️
+      <span id="timer">
+        15
+      </span>
+
+    </div>
+
+
+    <div class="question-box">
+
+      <h2 id="question">
+        Question
+      </h2>
+
+    </div>
+
+
+    <div
+      id="answers"
+      class="answers">
+    </div>
+
+
+    <button
+      id="nextBtn"
+      class="next-btn hidden"
+      onclick="nextQuestion()">
+
+      NEXT →
+
+    </button>
+
+  </div>
+
+
+  <!-- PASS PHONE SCREEN -->
+
+  <div id="passScreen" class="screen hidden">
+
+    <div class="pass-icon">
+      📱
+    </div>
+
+    <h1>PASS THE PHONE</h1>
+
+    <p>
+      It's now
+    </p>
+
+    <h2 id="nextPlayer">
+      Player 2
+    </h2>
+
+    <button
+      class="main-btn"
+      onclick="continueTurn()">
+
+      I'M READY 🔥
+
+    </button>
+
+  </div>
+
+
+  <!-- RESULT SCREEN -->
+
+  <div id="resultScreen" class="screen hidden">
+
+    <div class="winner-crown">
+      👑
+    </div>
+
+    <h1 id="resultTitle">
+      YOU WIN!
+    </h1>
+
+    <div id="resultText"></div>
+
+    <button
+      class="main-btn"
+      onclick="location.reload()">
+
+      PLAY AGAIN 🔥
+
+    </button>
+
+  </div>
+
+
+  <script src="script.js"></script>
+
+</body>
+</html>
