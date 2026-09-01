@@ -1,1225 +1,332 @@
-// =====================================
-// 👑 KiNG QUIZ
-// =====================================
-
-let gameMode = "solo";
-
-let players = [
-  { name: "اللاعب الأول", score: 0 },
-  { name: "اللاعب الثاني", score: 0 }
+/* ===================== DATA ===================== */
+const CATEGORIES = [
+  {id:'football', icon:'⚽', name:'كورة القدم', questions:[
+    {q:'مين اللاعب اللي سجل أول هدف في تاريخ كأس العالم (1930)؟', o:['لوسيان لوران','بيليه','مارادونا','زيدان'], a:0},
+    {q:'أي منتخب فاز بأول نسخة من كأس أمم أفريقيا سنة 1957؟', o:['مصر','السودان','إثيوبيا','تونس'], a:0},
+    {q:'كام مرة فاز بها نادي الأهلي بدوري أبطال أفريقيا حتى الآن (تقريبًا الأكتر في القارة)؟', o:['أكتر ناديين في أفريقيا','مرتين بس','مرة واحدة','لسه مفازش'], a:0},
+    {q:'مين حارس المرمى اللي حقق رقم قياسي في عدد الكلين شيتس بكأس العالم؟', o:['هوجو يوريس','جانلويجي بوفون','مانويل نوير','إيكر كاسياس'], a:1},
+    {q:'في أي سنة استضافت مصر كأس العالم لكرة اليد للمرة الأولى؟', o:['1999','2021','1995','2010'], a:0},
+    {q:'مين أصغر لاعب سجل في نهائي كأس العالم؟', o:['بيليه','مبابي','ميسي','رونالدو'], a:0},
+    {q:'أي دوري أوروبي بيُلقب بـ"الدوري الإنجليزي الممتاز" رسميًا من سنة؟', o:['1992','1985','2000','1978'], a:0},
+    {q:'مين اللاعب الوحيد اللي فاز بالكرة الذهبية وهو لاعب في نادي أفريقي (مش أوروبي وقت الفوز)؟', o:['جورج ويا','صلاح','دروغبا','إيتو'], a:0},
+  ]},
+  {id:'history', icon:'🏛️', name:'تاريخ', questions:[
+    {q:'مين الخليفة اللي أمر بجمع القرآن الكريم في مصحف واحد؟', o:['عمر بن الخطاب','أبو بكر الصديق','عثمان بن عفان','علي بن أبي طالب'], a:1},
+    {q:'في أي سنة سقطت الدولة العثمانية رسميًا؟', o:['1924','1918','1936','1900'], a:0},
+    {q:'مين قائد الجيش اللي هزم المغول في عين جالوت؟', o:['صلاح الدين','قطز والظاهر بيبرس','محمد علي','عمرو بن العاص'], a:1},
+    {q:'الثورة الفرنسية اندلعت في أي سنة؟', o:['1789','1776','1804','1750'], a:0},
+    {q:'مين اللي بنى مسجد محمد علي في القلعة؟', o:['يوسف بوشناق','معماري إيطالي بأمر محمد علي','أحمد باشا','إبراهيم باشا'], a:1},
+    {q:'الحرب العالمية التانية انتهت رسميًا في أي سنة؟', o:['1945','1944','1939','1950'], a:0},
+    {q:'مين أول حاكم أموي حوّل الخلافة لنظام وراثي؟', o:['معاوية بن أبي سفيان','عمر بن عبد العزيز','الوليد بن عبد الملك','يزيد بن معاوية'], a:0},
+    {q:'إيه اسم المعاهدة اللي أنهت الحرب العالمية الأولى؟', o:['فرساي','يالطا','كامب ديفيد','وستفاليا'], a:0},
+  ]},
+  {id:'geo', icon:'🌍', name:'جغرافيا', questions:[
+    {q:'أطول نهر في العالم من حيث الطول الرسمي؟', o:['النيل','الأمازون','المسيسيبي','اليانجتسي'], a:0},
+    {q:'أي دولة بيها أكبر عدد من الجزر في العالم؟', o:['السويد','إندونيسيا','النرويج','اليابان'], a:0},
+    {q:'إيه أصغر دولة في العالم من حيث المساحة؟', o:['موناكو','الفاتيكان','سان مارينو','ليختنشتاين'], a:1},
+    {q:'مضيق جبل طارق بيفصل بين قارتين، هما؟', o:['أوروبا وأفريقيا','آسيا وأوروبا','أفريقيا وآسيا','أمريكا وأوروبا'], a:0},
+    {q:'أعلى قمة جبلية في قارة أفريقيا؟', o:['كليمنجارو','جبل كينيا','أطلس','رأس دشن'], a:0},
+    {q:'أي صحراء أكبر مساحة: الصحراء الكبرى ولا صحراء الربع الخالي؟', o:['الصحراء الكبرى','الربع الخالي','متساويين تقريبًا','صحراء جوبي'], a:0},
+    {q:'دولة إيه بتضم أكبر عدد من الدول المتاخمة ليها (حدود بري مع 14 دولة)؟', o:['الصين','روسيا','البرازيل','فرنسا'], a:0},
+    {q:'بحيرة فيكتوريا أكبر بحيرة في أفريقيا، بتشترك فيها كام دولة؟', o:['3 (تنزانيا، أوغندا، كينيا)','دولتين','5 دول','دولة واحدة'], a:0},
+  ]},
+  {id:'bio', icon:'🧬', name:'أحياء', questions:[
+    {q:'إيه اسم العضو المسؤول عن إنتاج الأنسولين في جسم الإنسان؟', o:['البنكرياس','الكبد','الطحال','الكلى'], a:0},
+    {q:'كام عدد عظام جسم الإنسان البالغ؟', o:['206','180','250','300'], a:0},
+    {q:'إيه اسم العملية اللي بتحول بيها النباتات ضوء الشمس لطاقة؟', o:['البناء الضوئي','التنفس الخلوي','التمثيل الغذائي','التحلل'], a:0},
+    {q:'إيه أكبر عضو في جسم الإنسان؟', o:['الجلد','الكبد','الرئة','الأمعاء'], a:0},
+    {q:'الحمض النووي DNA بيتكون من كام قاعدة نيتروجينية أساسية؟', o:['4','2','6','8'], a:0},
+    {q:'إيه اسم الخلايا المسؤولة عن نقل الأكسجين في الدم؟', o:['كريات الدم الحمراء','كريات الدم البيضاء','الصفائح الدموية','الخلايا العصبية'], a:0},
+    {q:'أي جزء من المخ مسؤول عن التوازن؟', o:['المخيخ','المخ الأمامي','جذع المخ','الفص الصدغي'], a:0},
+    {q:'إيه اسم أصغر وحدة بناء في الكائن الحي؟', o:['الخلية','النواة','النسيج','الجين'], a:0},
+  ]},
+  {id:'love', icon:'❤️', name:'حب وعلاقات', questions:[
+    {q:'إيه اسم الهرمون اللي بيتفرز وقت الوقوع في الحب من أول نظرة؟ 😍', o:['الدوبامين','الميلاتونين','الإنسولين','الأدرينالين بس'], a:0},
+    {q:'حسب دراسات علم النفس، أد إيه بتاخد "نظرة الحب الأولى" وقت لحد ما يتكوّن انطباع؟', o:['أقل من ثانية','5 دقائق','ساعة','يوم كامل'], a:0},
+    {q:'إيه هو "هرمون الحضن" اللي بيتفرز وانت بتعانق حد بتحبه؟ 🤗', o:['الأوكسيتوسين','الكورتيزول','السيروتونين بس','التستوستيرون'], a:0},
+    {q:'على تيك توك، إيه أشهر تريند بيتسأل فيه "لو حبيبك نسي كذا... رد فعلك إيه؟"', o:['تحديات الـ"Red Flags/Green Flags"','تحدي الغميضة','تحدي الطبخ','تحدي الرقص'], a:0},
+    {q:'إيه اللغة اللي بيتكلمها القلب حسب كتاب "لغات الحب الخمس" لجاري تشابمان؟', o:['كلمات التشجيع، وقت، هدايا، لمسة، أفعال','لغة الجسد بس','لغة العيون بس','الموسيقى'], a:0},
+    {q:'أد إيه بيستمر متوسط مرحلة "الوله الأول" (limerence) في العلاقات علميًا؟', o:['من شهور لحد سنتين تقريبًا','أسبوع واحد','عمر كامل','يوم واحد'], a:0},
+    {q:'إيه أكتر حاجة بيقولها خبراء العلاقات إنها أساس أي علاقة ناجحة؟', o:['التواصل الصريح','الهدايا الغالية','عدم الخلاف نهائيًا','السوشيال ميديا'], a:0},
+    {q:'على السوشيال ميديا، إيه معنى مصطلح "Situationship" اللي بيتريند كتير؟', o:['علاقة من غير تسمية أو التزام واضح','خطوبة رسمية','جواز','صداقة بس'], a:0},
+  ]},
+  {id:'eng', icon:'🇬🇧', name:'إنجليزي', questions:[
+    {q:'What is the correct comparative form of "good"?', o:['Better','Gooder','More good','Best'], a:0},
+    {q:'Which word is a synonym of "meticulous"?', o:['Careless','Careful/precise','Fast','Lazy'], a:1},
+    {q:'"He ___ to the store yesterday." Choose the correct past tense.', o:['went','goed','gone','go'], a:0},
+    {q:'What does the idiom "spill the beans" mean?', o:['Reveal a secret','Cook dinner','Make a mistake','Get angry'], a:0},
+    {q:'Which sentence uses the present perfect tense correctly?', o:['I have visited Paris twice.','I visit Paris twice.','I am visiting Paris twice.','I visited Paris twice ago.'], a:0},
+    {q:'What is the plural of "criterion"?', o:['Criteria','Criterions','Criterias','Criterion'], a:0},
+    {q:'Which word means the opposite of "abundant"?', o:['Scarce','Plentiful','Huge','Wide'], a:0},
+    {q:'"Neither of the boys ___ ready." Choose the correct verb.', o:['is','are','were','have'], a:0},
+  ]},
+  {id:'hangout', icon:'😂', name:'قعدة صحاب', questions:[
+    {q:'لو صاحبك اتأخر ساعة على الميعاد، إيه أكتر عذر هيقوله على الأغلب؟', o:['الزحمة','نمت','النت وقع','مفيش بنزين'], a:0},
+    {q:'إيه أشهر لعبة ورق بتتلعب في قعدات الأصحاب في مصر؟', o:['الكونكان','الشطرنج','الدومينو بس','بلوت'], a:0},
+    {q:'لو حد في القعدة قالك "قولها بصراحة"، غالبًا هيبدأ إيه بعدها؟', o:['نقد مباشر مؤلم شوية 😂','مديح','سكوت','هزار'], a:0},
+    {q:'إيه أكتر حاجة بتتقال في القعدة وقت ما الأكل يوصل؟', o:['"يا رب تكون كتير"','"مش عايز آكل"','"خليها لبكرة"','"مش جعان"'], a:0},
+    {q:'مين غالبًا بيدفع الحساب في آخر القعدة حسب "التقليد المصري"؟', o:['اللي عزم أو أكبرهم سنًا','أصغرهم','بالقرعة دايمًا','محدش بيدفع'], a:0},
+    {q:'إيه أشهر جملة بتتقال لما حد يهرب من دور اللعب؟', o:['"أنا بس بتفرج"','"مش عارف ألعب"','"جاي دلوقتي"','"معايا مكالمة"'], a:0},
+    {q:'في قعدة الشيشة، إيه أكتر حاجة بتتقال كل شوية؟', o:['"هاتلنا فحم"','"سيبها كده"','"خلاص خلصت"','"مش عايز حاجة"'], a:0},
+    {q:'إيه أكتر سؤال بيتقال في آخر القعدة وكله تعبان؟', o:['"نقفل الجلسة دلوقتي ولا نكمل؟"','"هنعمل إيه بكرة الصبح؟"','"هو الساعة كام؟"','"مين هيوصلني؟"'], a:0},
+  ]},
+  {id:'politics', icon:'🗳️', name:'سياسة', questions:[
+    {q:'كام عدد الأعضاء الدائمين في مجلس الأمن التابع للأمم المتحدة؟', o:['5','10','15','7'], a:0},
+    {q:'في أي مدينة يقع المقر الرئيسي للاتحاد الأفريقي؟', o:['أديس أبابا','القاهرة','نيروبي','أبوجا'], a:0},
+    {q:'إيه اسم النظام السياسي اللي بيحكم فيه الشعب بشكل مباشر من غير ممثلين؟', o:['الديمقراطية المباشرة','الملكية الدستورية','الجمهورية البرلمانية','الفيدرالية'], a:0},
+    {q:'كام عدد الدول الأعضاء المؤسسة لجامعة الدول العربية سنة 1945؟', o:['7','5','10','22'], a:0},
+    {q:'إيه اسم المعاهدة اللي أسست الاتحاد الأوروبي بشكله الحالي سنة 1993؟', o:['معاهدة ماستريخت','معاهدة روما','معاهدة لشبونة','معاهدة باريس'], a:0},
+    {q:'مين أول أمين عام للأمم المتحدة؟', o:['تريغفي لي','كوفي أنان','بطرس غالي','بان كي مون'], a:0},
+    {q:'إيه معنى مصطلح "الفيتو" في القانون الدولي؟', o:['حق الاعتراض على قرار','حق التصويت','حق الترشح','حق العفو'], a:0},
+    {q:'في أي عام تأسست منظمة الأمم المتحدة؟', o:['1945','1919','1950','1939'], a:0},
+  ]},
+  {id:'general', icon:'🧠', name:'معلومات عامة', questions:[
+    {q:'إيه اسم أسرع حيوان بري في العالم؟', o:['الفهد الصياد (تشيتا)','الأسد','النمر','الحصان'], a:0},
+    {q:'كام عدد عظام الرقبة عند الزرافة مقارنة بالإنسان؟', o:['نفس العدد (7)','ضعف العدد','نص العدد','3 بس'], a:0},
+    {q:'إيه العنصر الكيميائي الأكتر وفرة في الكون؟', o:['الهيدروجين','الأكسجين','الكربون','الهيليوم'], a:0},
+    {q:'مين مخترع المصباح الكهربائي العملي؟', o:['توماس إديسون','نيكولا تسلا','ألكسندر بيل','إسحاق نيوتن'], a:0},
+    {q:'إيه أكبر محيط في العالم من حيث المساحة؟', o:['المحيط الهادي','المحيط الأطلسي','المحيط الهندي','المحيط المتجمد الشمالي'], a:0},
+    {q:'كام لون في قوس قزح؟', o:['7','5','6','9'], a:0},
+    {q:'إيه اسم أول قمر صناعي أطلق للفضاء؟', o:['سبوتنيك 1','أبولو 11','فوييجر 1','هابل'], a:0},
+    {q:'إيه اللغة الأكتر تحدثًا في العالم كلغة أم؟', o:['الصينية الماندرين','الإنجليزية','الإسبانية','العربية'], a:0},
+  ]},
+  {id:'movies', icon:'🎬', name:'أفلام ومسلسلات', questions:[
+    {q:'إيه أول فيلم رسوم متحركة طويل في تاريخ السينما؟', o:['سنو وايت والأقزام السبعة (1937)','توي ستوري','شركة المرعبين المحدودة','الأسد الملك'], a:0},
+    {q:'مين مخرج ثلاثية "The Lord of the Rings"؟', o:['بيتر جاكسون','ستيفن سبيلبرغ','جيمس كاميرون','كريستوفر نولان'], a:0},
+    {q:'إيه أعلى فيلم حقق إيرادات في تاريخ السينما (بدون تعديل التضخم) حتى وقت قريب؟', o:['Avatar','Avengers: Endgame','Titanic','Star Wars'], a:0},
+    {q:'مين الممثل اللي لعب دور "الجوكر" وفاز بأوسكار عن الدور سنة 2020؟', o:['واكين فينيكس','هيث ليدجر','جاريد ليتو','خواكين تورس'], a:0},
+    {q:'إيه اسم أول فيلم مصري ناطق في تاريخ السينما المصرية؟', o:['أولاد الذوات (1932)','العزيمة','دنيا','سلامة في خير'], a:0},
+    {q:'مسلسل "Game of Thrones" مبني على سلسلة روايات لمين؟', o:['جورج آر. آر. مارتن','ج.ك. رولينج','ستيفن كينج','تولكين'], a:0},
+    {q:'مين مخرج فيلم "Inception"؟', o:['كريستوفر نولان','دينيس فيلنوف','ديفيد فينشر','ريدلي سكوت'], a:0},
+    {q:'إيه اسم الاستوديو المسؤول عن أفلام مثل "Inside Out" و"Up"؟', o:['بيكسار','ديزني أنيميشن','دريم ووركس','وارنر بروذرز'], a:0},
+  ]},
 ];
 
-let currentPlayer = 0;
-let selectedCategory = "";
-let questions = [];
-let questionIndex = 0;
-let answered = false;
-let timerInterval;
-let timeLeft = 15;
-
-
-// =====================================
-// 🧠 بنك الأسئلة
-// =====================================
-
-const questionBank = {
-
-  football: [
-    {
-      q: "من فاز بكأس العالم 2022؟",
-      answers: ["فرنسا", "الأرجنتين", "البرازيل", "ألمانيا"],
-      correct: 1
-    },
-    {
-      q: "من أكثر نادٍ فاز بدوري أبطال أوروبا؟",
-      answers: ["برشلونة", "ليفربول", "ريال مدريد", "بايرن ميونخ"],
-      correct: 2
-    },
-    {
-      q: "كم لاعبًا يشارك من الفريق الواحد داخل الملعب؟",
-      answers: ["9", "10", "11", "12"],
-      correct: 2
-    },
-    {
-      q: "من فاز بكأس العالم 2018؟",
-      answers: ["ألمانيا", "فرنسا", "البرازيل", "إسبانيا"],
-      correct: 1
-    },
-    {
-      q: "من اللاعب المعروف بلقب ملك كرة القدم؟",
-      answers: ["ميسي", "مارادونا", "بيليه", "رونالدو"],
-      correct: 2
-    },
-    {
-      q: "أي منتخب فاز بأكبر عدد من بطولات كأس العالم؟",
-      answers: ["البرازيل", "ألمانيا", "إيطاليا", "الأرجنتين"],
-      correct: 0
-    },
-    {
-      q: "كم دقيقة تستغرق مباراة كرة القدم الأساسية؟",
-      answers: ["60", "75", "90", "120"],
-      correct: 2
-    },
-    {
-      q: "ما لون البطاقة التي تعني طرد اللاعب؟",
-      answers: ["الصفراء", "الحمراء", "الزرقاء", "الخضراء"],
-      correct: 1
-    },
-    {
-      q: "أين أقيم كأس العالم 2022؟",
-      answers: ["روسيا", "قطر", "الإمارات", "السعودية"],
-      correct: 1
-    },
-    {
-      q: "من فاز بالكرة الذهبية 2022؟",
-      answers: ["ليونيل ميسي", "كريم بنزيما", "هالاند", "مبابي"],
-      correct: 1
-    }
-  ],
-
-
-  history: [
-    {
-      q: "من بنى الهرم الأكبر؟",
-      answers: ["خوفو", "رمسيس الثاني", "توت عنخ آمون", "تحتمس الثالث"],
-      correct: 0
-    },
-    {
-      q: "أين بدأت الألعاب الأولمبية القديمة؟",
-      answers: ["مصر", "اليونان", "إيطاليا", "تركيا"],
-      correct: 1
-    },
-    {
-      q: "من اكتشف مقبرة توت عنخ آمون؟",
-      answers: ["نابليون", "هوارد كارتر", "هيرودوت", "جوليوس قيصر"],
-      correct: 1
-    },
-    {
-      q: "ما عاصمة الإمبراطورية الرومانية؟",
-      answers: ["أثينا", "روما", "باريس", "لندن"],
-      correct: 1
-    },
-    {
-      q: "من هي كليوباترا؟",
-      answers: ["ملكة مصرية", "ملكة إنجليزية", "ملكة فرنسية", "إمبراطورة رومانية"],
-      correct: 0
-    },
-    {
-      q: "أين قامت الحضارة الفرعونية؟",
-      answers: ["مصر", "الصين", "اليونان", "الهند"],
-      correct: 0
-    },
-    {
-      q: "من هو نابليون بونابرت؟",
-      answers: ["قائد فرنسي", "ملك إنجليزي", "فرعون مصري", "فيلسوف يوناني"],
-      correct: 0
-    },
-    {
-      q: "ما الحضارة التي بنت الكولوسيوم؟",
-      answers: ["الرومانية", "المصرية", "الفارسية", "الصينية"],
-      correct: 0
-    },
-    {
-      q: "من كان أول رئيس للولايات المتحدة؟",
-      answers: ["أبراهام لينكولن", "جورج واشنطن", "توماس جيفرسون", "جون آدامز"],
-      correct: 1
-    },
-    {
-      q: "ما المدينة التي كانت مركز الحضارة اليونانية القديمة؟",
-      answers: ["أثينا", "روما", "باريس", "برلين"],
-      correct: 0
-    }
-  ],
-
-
-  geography: [
-    {
-      q: "ما أكبر دولة في العالم من حيث المساحة؟",
-      answers: ["كندا", "الصين", "روسيا", "الولايات المتحدة"],
-      correct: 2
-    },
-    {
-      q: "ما عاصمة مصر؟",
-      answers: ["الجيزة", "القاهرة", "الإسكندرية", "الأقصر"],
-      correct: 1
-    },
-    {
-      q: "ما أكبر محيط في العالم؟",
-      answers: ["الأطلسي", "الهندي", "الهادئ", "المتجمد الشمالي"],
-      correct: 2
-    },
-    {
-      q: "في أي دولة يوجد برج إيفل؟",
-      answers: ["إيطاليا", "فرنسا", "إسبانيا", "ألمانيا"],
-      correct: 1
-    },
-    {
-      q: "في أي قارة تقع مصر؟",
-      answers: ["آسيا", "أوروبا", "أفريقيا", "أمريكا الجنوبية"],
-      correct: 2
-    },
-    {
-      q: "ما عاصمة اليابان؟",
-      answers: ["سيول", "طوكيو", "بكين", "بانكوك"],
-      correct: 1
-    },
-    {
-      q: "ما أكبر صحراء حارة في العالم؟",
-      answers: ["جوبي", "الصحراء الكبرى", "العربية", "كالاهاري"],
-      correct: 1
-    },
-    {
-      q: "في أي دولة تقع مدينة برشلونة؟",
-      answers: ["البرتغال", "إسبانيا", "إيطاليا", "فرنسا"],
-      correct: 1
-    },
-    {
-      q: "ما عاصمة إيطاليا؟",
-      answers: ["روما", "ميلانو", "البندقية", "نابولي"],
-      correct: 0
-    },
-    {
-      q: "ما النهر الذي يمر في مصر؟",
-      answers: ["الأمازون", "النيل", "الدانوب", "التايمز"],
-      correct: 1
-    }
-  ],
-
-
-  biology: [
-    {
-      q: "ما الوحدة الأساسية للحياة؟",
-      answers: ["الذرة", "الخلية", "النسيج", "العضو"],
-      correct: 1
-    },
-    {
-      q: "ما العضو المسؤول عن ضخ الدم؟",
-      answers: ["الكبد", "المخ", "القلب", "الرئة"],
-      correct: 2
-    },
-    {
-      q: "ما الغاز الذي يحتاجه الإنسان للتنفس؟",
-      answers: ["ثاني أكسيد الكربون", "الأكسجين", "النيتروجين", "الهيدروجين"],
-      correct: 1
-    },
-    {
-      q: "ما العضو المسؤول بشكل أساسي عن التفكير؟",
-      answers: ["القلب", "المخ", "الكبد", "المعدة"],
-      correct: 1
-    },
-    {
-      q: "ما العملية التي تصنع بها النباتات غذاءها باستخدام الضوء؟",
-      answers: ["التنفس", "البناء الضوئي", "الهضم", "التخمر"],
-      correct: 1
-    },
-    {
-      q: "كم عدد الكروموسومات الطبيعية لدى الإنسان؟",
-      answers: ["23", "46", "44", "48"],
-      correct: 1
-    },
-    {
-      q: "ما خلايا الدم التي تساعد على مقاومة العدوى؟",
-      answers: ["الحمراء", "البيضاء", "الصفائح", "البلازما"],
-      correct: 1
-    },
-    {
-      q: "ماذا يعني DNA؟",
-      answers: ["الحمض النووي", "السكر النووي", "البروتين النووي", "لا شيء مما سبق"],
-      correct: 0
-    },
-    {
-      q: "ما العضوان المسؤولان بشكل أساسي عن تنقية الدم؟",
-      answers: ["الرئتان", "الكليتان", "القلب", "المعدة"],
-      correct: 1
-    },
-    {
-      q: "ما أكبر عضو في جسم الإنسان؟",
-      answers: ["القلب", "الكبد", "الجلد", "المخ"],
-      correct: 2
-    }
-  ],
-
-
-  love: [
-    {
-      q: "ما أهم شيء لبناء علاقة صحية؟",
-      answers: ["الثقة", "الكذب", "الغيرة", "التجاهل"],
-      correct: 0
-    },
-    {
-      q: "ما أفضل طريقة لحل الخلاف؟",
-      answers: ["الصوت العالي", "التجاهل", "الحوار الهادئ", "الخصام"],
-      correct: 2
-    },
-    {
-      q: "ما الذي يساعد على بناء الثقة؟",
-      answers: ["الصراحة", "الأسرار", "الكذب", "التلاعب"],
-      correct: 0
-    },
-    {
-      q: "العلاقة الصحية يجب أن تحتوي على:",
-      answers: ["احترام", "تحكم", "خوف", "ضغط"],
-      correct: 0
-    },
-    {
-      q: "ما أهم جزء في التواصل؟",
-      answers: ["الاستماع", "المقاطعة", "التجاهل", "الصراخ"],
-      correct: 0
-    },
-    {
-      q: "كيف يمكنك إظهار تقديرك لشخص تحبه؟",
-      answers: ["شكره", "تجاهله", "إهانته", "الكذب عليه"],
-      correct: 0
-    },
-    {
-      q: "ما معنى الحدود الصحية في العلاقة؟",
-      answers: ["احترام حدود الطرف الآخر", "التحكم فيه", "التجسس عليه", "إجباره"],
-      correct: 0
-    },
-    {
-      q: "لو الشخص الذي أمامك متضايق، الأفضل أن:",
-      answers: ["تسمعه", "تسخر منه", "تتجاهله", "تبدأ خناقة"],
-      correct: 0
-    },
-    {
-      q: "ما الذي يقوي العلاقة أكثر؟",
-      answers: ["الثقة", "الشك", "الخوف", "الغيرة"],
-      correct: 0
-    },
-    {
-      q: "العلاقة الجيدة تجعل الطرفين يشعران بـ:",
-      answers: ["الاحترام", "الخوف", "التحكم", "الضغط"],
-      correct: 0
-    }
-  ],
-
-
-  english: [
-    {
-      q: "ما عكس كلمة Easy؟",
-      answers: ["سهل", "صعب", "سريع", "صغير"],
-      correct: 1
-    },
-    {
-      q: "اختر الجملة الصحيحة:",
-      answers: [
-        "She go to school.",
-        "She goes to school.",
-        "She going school.",
-        "She gone school."
-      ],
-      correct: 1
-    },
-    {
-      q: "ما جمع كلمة Child؟",
-      answers: ["Childs", "Children", "Childes", "Childrens"],
-      correct: 1
-    },
-    {
-      q: "ما معنى كلمة Beautiful؟",
-      answers: ["قبيح", "جميل", "غاضب", "سريع"],
-      correct: 1
-    },
-    {
-      q: "ما الماضي من كلمة Go؟",
-      answers: ["Goed", "Gone", "Went", "Going"],
-      correct: 2
-    },
-    {
-      q: "ما عكس كلمة Expensive؟",
-      answers: ["رخيص", "غني", "كبير", "ثقيل"],
-      correct: 0
-    },
-    {
-      q: "أي كلمة من الآتي اسم Noun؟",
-      answers: ["Run", "Beautiful", "Book", "Quickly"],
-      correct: 2
-    },
-    {
-      q: "ما معنى كلمة Happy؟",
-      answers: ["حزين", "سعيد", "غاضب", "متعب"],
-      correct: 1
-    },
-    {
-      q: "اختر الكلمة الصحيحة: I ___ football every Friday.",
-      answers: ["play", "plays", "playing", "played"],
-      correct: 0
-    },
-    {
-      q: "ما عكس كلمة Early؟",
-      answers: ["Late", "Fast", "Quick", "Soon"],
-      correct: 0
-    }
-  ],
-
-
-  friends: [
-    {
-      q: "مين غالبًا بيتأخر على الخروجة؟ 😂",
-      answers: ["صاحب النوم", "المنظم", "اللي بييجي بدري", "محدش"],
-      correct: 0
-    },
-    {
-      q: "مين غالبًا عارف آخر الأخبار بين الصحاب؟ 👀",
-      answers: ["الهادئ", "خبير الأخبار", "المدرس", "محدش"],
-      correct: 1
-    },
-    {
-      q: "إيه اللي بيخلي القعدة أحلى؟",
-      answers: ["الضحك والجو الحلو", "الخناقات", "السكوت", "الزهق"],
-      correct: 0
-    },
-    {
-      q: "مين أكتر واحد ممكن ينسى موبايله؟",
-      answers: ["السرحان", "المنظم", "المسؤول", "محدش"],
-      correct: 0
-    },
-    {
-      q: "إيه أكتر حاجة بتحصل في قعدة الصحاب؟",
-      answers: ["الهزار", "السكوت", "المذاكرة", "النوم"],
-      correct: 0
-    },
-    {
-      q: "مين أول واحد غالبًا يقول: ناكل إيه؟ 😂",
-      answers: ["الجعان", "النايم", "الهادئ", "محدش"],
-      correct: 0
-    },
-    {
-      q: "إيه أهم حاجة في قعدة صحاب حلوة؟",
-      answers: ["الضحك", "الخناق", "الملل", "السكوت"],
-      correct: 0
-    },
-    {
-      q: "مين بيقول أنا جاي وهو لسه في البيت؟ 😂",
-      answers: ["صاحب المواعيد", "المنظم", "البدري", "محدش"],
-      correct: 0
-    },
-    {
-      q: "الصحاب الحقيقيين غالبًا بيشاركوا:",
-      answers: ["الذكريات", "ولا حاجة", "الخناقات فقط", "كل أسرار الناس"],
-      correct: 0
-    },
-    {
-      q: "إيه أهم صفة في الصاحب الجدع؟",
-      answers: ["الجدعنة والثقة", "الغيرة", "الدراما", "المنافسة"],
-      correct: 0
-    }
-  ],
-
-
-  politics: [
-    {
-      q: "ما معنى الديمقراطية؟",
-      answers: [
-        "حكم الشعب",
-        "حكم شخص واحد دائمًا",
-        "حكم الجيش",
-        "الحكم بدون انتخابات"
-      ],
-      correct: 0
-    },
-    {
-      q: "ما هو الدستور؟",
-      answers: [
-        "الإطار القانوني الأساسي للدولة",
-        "خريطة",
-        "قانون رياضي",
-        "وثيقة سفر"
-      ],
-      correct: 0
-    },
-    {
-      q: "ماذا تعني كلمة UN؟",
-      answers: [
-        "الأمم المتحدة",
-        "شبكة عالمية",
-        "اتحاد دولي",
-        "لا شيء"
-      ],
-      correct: 0
-    },
-    {
-      q: "ما هي الانتخابات؟",
-      answers: [
-        "عملية اختيار ممثلين أو مسؤولين",
-        "محكمة",
-        "تدريب عسكري",
-        "اتفاق تجاري"
-      ],
-      correct: 0
-    },
-    {
-      q: "ما هو البرلمان؟",
-      answers: [
-        "هيئة تشريعية",
-        "مستشفى",
-        "محكمة",
-        "بنك"
-      ],
-      correct: 0
-    },
-    {
-      q: "ما هي الدبلوماسية؟",
-      answers: [
-        "إدارة العلاقات بين الدول",
-        "لعبة رياضية",
-        "كتابة روايات",
-        "إدارة شركة"
-      ],
-      correct: 0
-    },
-    {
-      q: "ما هو الحزب السياسي؟",
-      answers: [
-        "مجموعة منظمة لها أهداف سياسية",
-        "نادٍ رياضي",
-        "شركة",
-        "مدرسة"
-      ],
-      correct: 0
-    },
-    {
-      q: "ماذا يعني التصويت؟",
-      answers: [
-        "التعبير عن اختيار في انتخابات أو قرار",
-        "دفع الضرائب",
-        "توقيع عقد",
-        "رفع دعوى"
-      ],
-      correct: 0
-    },
-    {
-      q: "ما هو القانون؟",
-      answers: [
-        "قاعدة تفرضها وتنفذها سلطة مختصة",
-        "اقتراح",
-        "لعبة",
-        "رسالة"
-      ],
-      correct: 0
-    },
-    {
-      q: "ما المقصود بالعلاقات الدولية؟",
-      answers: [
-        "العلاقات والتعاملات بين الدول",
-        "علاقات الأصدقاء",
-        "علاقات الشركات فقط",
-        "الرياضة"
-      ],
-      correct: 0
-    }
-  ],
-
-
-  general: [
-    {
-      q: "كم يومًا في السنة الكبيسة؟",
-      answers: ["364", "365", "366", "367"],
-      correct: 2
-    },
-    {
-      q: "ما أسرع حيوان بري؟",
-      answers: ["الأسد", "الفهد", "الحصان", "النمر"],
-      correct: 1
-    },
-    {
-      q: "كم عدد كواكب المجموعة الشمسية؟",
-      answers: ["7", "8", "9", "10"],
-      correct: 1
-    },
-    {
-      q: "ما الكوكب المعروف بالكوكب الأحمر؟",
-      answers: ["الزهرة", "المريخ", "المشتري", "عطارد"],
-      correct: 1
-    },
-    {
-      q: "كم لونًا يوجد تقليديًا في قوس قزح؟",
-      answers: ["5", "6", "7", "8"],
-      correct: 2
-    },
-    {
-      q: "ما أكبر حيوان ثديي؟",
-      answers: ["الفيل", "الحوت الأزرق", "الزرافة", "الحوت القاتل"],
-      correct: 1
-    },
-    {
-      q: "أي معدن يكون سائلًا في درجة حرارة الغرفة؟",
-      answers: ["الحديد", "الزئبق", "الذهب", "الفضة"],
-      correct: 1
-    },
-    {
-      q: "كم ضلعًا للشكل السداسي؟",
-      answers: ["5", "6", "7", "8"],
-      correct: 1
-    },
-    {
-      q: "ما الحيوان المعروف بأنه أفضل صديق للإنسان؟",
-      answers: ["القطة", "الكلب", "الحصان", "العصفور"],
-      correct: 1
-    },
-    {
-      q: "ما هو H2O؟",
-      answers: ["الأكسجين", "الماء", "الهيدروجين", "الملح"],
-      correct: 1
-    }
-  ],
-
-
-  movies: [
-    {
-      q: "من هو جاك سبارو؟",
-      answers: ["شخصية من قراصنة الكاريبي", "شخصية من تايتانيك", "بطل أفاتار", "بطل ماتريكس"],
-      correct: 0
-    },
-    {
-      q: "من أخرج فيلم Titanic؟",
-      answers: ["جيمس كاميرون", "كريستوفر نولان", "ستيفن سبيلبرغ", "ريدلي سكوت"],
-      correct: 0
-    },
-    {
-      q: "من هو باتمان؟",
-      answers: ["بيتر باركر", "بروس واين", "كلارك كينت", "توني ستارك"],
-      correct: 1
-    },
-    {
-      q: "من هو بيتر باركر؟",
-      answers: ["سوبرمان", "سبايدرمان", "الرجل الحديدي", "باتمان"],
-      correct: 1
-    },
-    {
-      q: "من يحمل المطرقة ميولنير؟",
-      answers: ["ثور", "باتمان", "سبايدرمان", "هالك"],
-      correct: 0
-    },
-    {
-      q: "من هو بطل سلسلة Harry Potter؟",
-      answers: ["هاري بوتر", "توني ستارك", "جاك سبارو", "بروس واين"],
-      correct: 0
-    },
-    {
-      q: "أي فيلم تدور أحداثه في عالم Pandora؟",
-      answers: ["Avatar", "Titanic", "Joker", "Rocky"],
-      correct: 0
-    },
-    {
-      q: "من هو Captain America؟",
-      answers: ["ستيف روجرز", "توني ستارك", "ثور", "بيتر باركر"],
-      correct: 0
-    },
-    {
-      q: "من هو الرجل الحديدي؟",
-      answers: ["توني ستارك", "بروس واين", "ستيف روجرز", "كلارك كينت"],
-      correct: 0
-    },
-    {
-      q: "أي سلسلة مشهورة تحتوي على شخصية Darth Vader؟",
-      answers: ["Star Wars", "Harry Potter", "Marvel", "Titanic"],
-      correct: 0
-    }
-  ]
-
+/* ===================== STATE ===================== */
+let state = {
+  mode: 1,
+  playerNames: ['اللاعب'],
+  scores: [0],
+  category: null,
+  questions: [],
+  index: 0,
+  turn: 0,
+  timer: null,
+  timeLeft: 15,
+  answered: false,
 };
 
+/* ===================== HELPERS ===================== */
+const $ = sel => document.querySelector(sel);
+const $all = sel => document.querySelectorAll(sel);
 
-// =====================================
-// 🖥️ التنقل بين الشاشات
-// =====================================
-
-function showScreen(id) {
-
-  document
-    .querySelectorAll(".screen")
-    .forEach(screen => {
-      screen.classList.add("hidden");
-    });
-
-  document
-    .getElementById(id)
-    .classList.remove("hidden");
-
+function showScreen(id){
+  $all('.screen').forEach(s => s.classList.remove('active'));
+  $('#' + id).classList.add('active');
 }
 
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
 
-// =====================================
-// 👤 لاعب واحد
-// =====================================
+/* ===================== BUILD CATEGORY GRID ===================== */
+const catGrid = $('#cat-grid');
+CATEGORIES.forEach(cat => {
+  const btn = document.createElement('button');
+  btn.className = 'cat-btn';
+  btn.innerHTML = `<span class="ic">${cat.icon}</span><span>${cat.name}</span>`;
+  btn.addEventListener('click', () => startCategory(cat));
+  catGrid.appendChild(btn);
+});
 
-function startGame(mode) {
-
-  gameMode = mode;
-
-  players = [
-    {
-      name: "اللاعب",
-      score: 0
-    },
-    {
-      name: "اللاعب الثاني",
-      score: 0
+/* ===================== HOME / MODE SELECT ===================== */
+$all('.choice-btn[data-players]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.mode = parseInt(btn.dataset.players, 10);
+    if(state.mode === 1){
+      state.playerNames = ['اللاعب'];
+      state.scores = [0];
+      showScreen('screen-category');
+    } else {
+      state.playerNames = ['اللاعب 1', 'اللاعب 2'];
+      state.scores = [0, 0];
+      showScreen('screen-category');
     }
-  ];
-
-  currentPlayer = 0;
-
-  showScreen("categoryScreen");
-
-}
-
-
-// =====================================
-// 👥 لاعبان
-// =====================================
-
-function showTwoPlayers() {
-
-  showScreen("playersScreen");
-
-}
-
-
-function startTwoPlayers() {
-
-  const p1 =
-    document
-      .getElementById("player1")
-      .value
-      .trim();
-
-  const p2 =
-    document
-      .getElementById("player2")
-      .value
-      .trim();
-
-  players[0].name =
-    p1 || "اللاعب الأول";
-
-  players[1].name =
-    p2 || "اللاعب الثاني";
-
-  players[0].score = 0;
-
-  players[1].score = 0;
-
-  currentPlayer = 0;
-
-  gameMode = "two";
-
-  showScreen("categoryScreen");
-
-}
-
-
-function backHome() {
-
-  showScreen("startScreen");
-
-}
-
-
-// =====================================
-// 🎯 اختيار القسم
-// =====================================
-
-function selectCategory(category) {
-
-  selectedCategory = category;
-
-  questions =
-    [...questionBank[category]];
-
-  shuffle(questions);
-
-  questions =
-    questions.slice(0, 10);
-
-  questionIndex = 0;
-
-  players.forEach(player => {
-    player.score = 0;
   });
+});
 
-  showScreen("quizScreen");
+$('#btn-back-home').addEventListener('click', () => showScreen('screen-home'));
 
-  loadQuestion();
-
+/* ===================== START CATEGORY ===================== */
+function startCategory(cat){
+  state.category = cat;
+  state.questions = shuffle(cat.questions);
+  state.index = 0;
+  state.turn = 0;
+  state.scores = state.scores.map(() => 0);
+  if(state.mode === 2){
+    showPass();
+  } else {
+    showScreen('screen-question');
+    loadQuestion();
+  }
 }
 
+function showPass(){
+  $('#pass-name').textContent = state.playerNames[state.turn];
+  showScreen('screen-pass');
+}
+$('#btn-ready').addEventListener('click', () => {
+  showScreen('screen-question');
+  loadQuestion();
+});
 
-// =====================================
-// 🔀 خلط الأسئلة
-// =====================================
+/* ===================== QUESTION FLOW ===================== */
+function loadQuestion(){
+  state.answered = false;
+  const total = state.questions.length;
+  const q = state.questions[state.index];
 
-function shuffle(array) {
+  $('#cat-tag').textContent = `${state.category.icon} ${state.category.name}`;
+  $('#turn-pill').textContent = state.mode === 2 ? `دور ${state.playerNames[state.turn]}` : 'دورك أنت';
+  $('#q-progress').textContent = `السؤال ${state.index + 1} من ${total}`;
+  $('#question-text').textContent = q.q;
 
-  for (
-    let i = array.length - 1;
-    i > 0;
-    i--
-  ) {
-
-    const j =
-      Math.floor(
-        Math.random() * (i + 1)
-      );
-
-    [
-      array[i],
-      array[j]
-    ] =
-    [
-      array[j],
-      array[i]
-    ];
-
+  // dots
+  const dotsWrap = $('#dots');
+  dotsWrap.innerHTML = '';
+  for(let i=0;i<total;i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i < state.index ? ' done' : '') + (i === state.index ? ' current' : '');
+    dotsWrap.appendChild(d);
   }
 
-}
+  // options
+  const optsWrap = $('#options');
+  optsWrap.innerHTML = '';
+  const order = q.o.map((text, idx) => ({text, idx}));
+  shuffle(order).forEach(opt => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = opt.text;
+    b.addEventListener('click', () => selectAnswer(opt.idx, b));
+    optsWrap.appendChild(b);
+  });
 
-
-// =====================================
-// ❓ تحميل السؤال
-// =====================================
-
-function loadQuestion() {
-
-  clearInterval(timerInterval);
-
-  answered = false;
-
-  timeLeft = 15;
-
-  const timer =
-    document.getElementById("timer");
-
-  timer.textContent = timeLeft;
-
-  timer.style.borderColor = "";
-
-  timer.style.color = "";
-
-  document
-    .getElementById("nextBtn")
-    .classList.add("hidden");
-
-
-  const player =
-    players[currentPlayer];
-
-  document
-    .getElementById("currentPlayer")
-    .textContent =
-      player.name;
-
-  document
-    .getElementById("score")
-    .textContent =
-      player.score;
-
-
-  document
-    .getElementById("questionNumber")
-    .textContent =
-      questionIndex + 1;
-
-
-  document
-    .getElementById("progressBar")
-    .style.width =
-      (
-        (questionIndex + 1)
-        /
-        questions.length
-        *
-        100
-      ) + "%";
-
-
-  const question =
-    questions[questionIndex];
-
-  document
-    .getElementById("question")
-    .textContent =
-      question.q;
-
-
-  const answers =
-    document.getElementById("answers");
-
-  answers.innerHTML = "";
-
-
-  question.answers.forEach(
-    (answer, index) => {
-
-      const button =
-        document.createElement("button");
-
-      button.className =
-        "answer-btn";
-
-      button.textContent =
-        `${String.fromCharCode(65 + index)}. ${answer}`;
-
-      button.onclick = () => {
-
-        checkAnswer(
-          index,
-          button
-        );
-
-      };
-
-      answers.appendChild(button);
-
-    }
-  );
-
-
+  $('#btn-next').disabled = true;
   startTimer();
-
 }
 
+function startTimer(){
+  clearInterval(state.timer);
+  state.timeLeft = 15;
+  const circle = $('#timer-circle');
+  const circumference = 151;
+  circle.style.strokeDasharray = circumference;
+  updateTimerUI(circle, circumference);
 
-// =====================================
-// ⏱️ المؤقت
-// =====================================
-
-function startTimer() {
-
-  clearInterval(timerInterval);
-
-  timerInterval =
-    setInterval(() => {
-
-      timeLeft--;
-
-      const timer =
-        document.getElementById("timer");
-
-      timer.textContent =
-        timeLeft;
-
-
-      if (timeLeft <= 5) {
-
-        timer.style.borderColor =
-          "#ff4d5d";
-
-        timer.style.color =
-          "#ff4d5d";
-
-      }
-
-
-      if (timeLeft <= 0) {
-
-        clearInterval(timerInterval);
-
-        timeOut();
-
-      }
-
-    }, 1000);
-
-}
-
-
-// =====================================
-// ⌛ انتهاء الوقت
-// =====================================
-
-function timeOut() {
-
-  if (answered)
-    return;
-
-  answered = true;
-
-  const question =
-    questions[questionIndex];
-
-  const buttons =
-    document.querySelectorAll(
-      ".answer-btn"
-    );
-
-
-  buttons.forEach(
-    (button, index) => {
-
-      button.disabled = true;
-
-      if (
-        index === question.correct
-      ) {
-
-        button.classList.add(
-          "correct"
-        );
-
-      }
-
+  state.timer = setInterval(() => {
+    state.timeLeft--;
+    updateTimerUI(circle, circumference);
+    if(state.timeLeft <= 0){
+      clearInterval(state.timer);
+      if(!state.answered) revealAnswer(-1);
     }
-  );
-
-
-  document
-    .getElementById("nextBtn")
-    .classList.remove("hidden");
-
+  }, 1000);
 }
 
+function updateTimerUI(circle, circumference){
+  $('#timer-num').textContent = state.timeLeft;
+  const pct = state.timeLeft / 15;
+  circle.style.strokeDashoffset = circumference * (1 - pct);
+  circle.style.stroke = state.timeLeft <= 5 ? '#e07a7a' : 'var(--gold-bright)';
+}
 
-// =====================================
-// ✅ فحص الإجابة
-// =====================================
+function selectAnswer(idx, btnEl){
+  if(state.answered) return;
+  revealAnswer(idx);
+}
 
-function checkAnswer(
-  selected,
-  selectedButton
-) {
+function revealAnswer(chosenIdx){
+  state.answered = true;
+  clearInterval(state.timer);
+  const q = state.questions[state.index];
+  const buttons = $all('#options .opt');
 
-  if (answered)
-    return;
-
-  answered = true;
-
-  clearInterval(timerInterval);
-
-  const question =
-    questions[questionIndex];
-
-  const buttons =
-    document.querySelectorAll(
-      ".answer-btn"
-    );
-
-
-  buttons.forEach(button => {
-    button.disabled = true;
+  buttons.forEach(b => {
+    b.disabled = true;
+    const isCorrectText = b.textContent === q.o[q.a];
+    if(isCorrectText){
+      b.classList.add('correct');
+    } else if(chosenIdx !== -1 && b.textContent === q.o[chosenIdx]){
+      b.classList.add('wrong');
+    } else {
+      b.classList.add('faded');
+    }
   });
 
+  if(chosenIdx === q.a){
+    state.scores[state.turn]++;
+  }
 
-  if (
-    selected === question.correct
-  ) {
+  $('#btn-next').disabled = false;
+}
 
-    selectedButton.classList.add(
-      "correct"
-    );
+$('#btn-next').addEventListener('click', () => {
+  const total = state.questions.length;
 
-    players[currentPlayer].score += 100;
-
-
-    if (timeLeft >= 10) {
-
-      players[currentPlayer].score += 50;
-
+  if(state.mode === 2){
+    // alternate turn each question
+    state.turn = (state.turn + 1) % state.playerNames.length;
+    state.index++;
+    if(state.index >= total){
+      showResult();
+    } else {
+      showPass();
     }
-
-  }
-
-  else {
-
-    selectedButton.classList.add(
-      "wrong"
-    );
-
-    buttons[
-      question.correct
-    ].classList.add(
-      "correct"
-    );
-
-  }
-
-
-  document
-    .getElementById("score")
-    .textContent =
-      players[currentPlayer].score;
-
-
-  document
-    .getElementById("nextBtn")
-    .classList.remove("hidden");
-
-}
-
-
-// =====================================
-// ➡️ السؤال التالي
-// =====================================
-
-function nextQuestion() {
-
-  questionIndex++;
-
-
-  if (
-    questionIndex >= questions.length
-  ) {
-
-    if (
-      gameMode === "two" &&
-      currentPlayer === 0
-    ) {
-
-      currentPlayer = 1;
-
-      questionIndex = 0;
-
-      showPassScreen();
-
-      return;
-
+  } else {
+    state.index++;
+    if(state.index >= total){
+      showResult();
+    } else {
+      loadQuestion();
     }
+  }
+});
 
+/* ===================== RESULT ===================== */
+function showResult(){
+  $('#result-sub').textContent = `${state.category.icon} ${state.category.name}`;
 
-    finishGame();
-
-    return;
-
+  if(state.mode === 1){
+    $('#result-single').style.display = 'block';
+    $('#result-multi').style.display = 'none';
+    $('#result-title').textContent = 'النتيجة';
+    $('#result-score').textContent = `${state.scores[0]}/${state.questions.length}`;
+  } else {
+    $('#result-single').style.display = 'none';
+    $('#result-multi').style.display = 'flex';
+    const wrap = $('#result-multi');
+    wrap.innerHTML = '';
+    const maxScore = Math.max(...state.scores);
+    state.playerNames.forEach((name, i) => {
+      const row = document.createElement('div');
+      row.className = 'result-player-row' + (state.scores[i] === maxScore ? ' winner' : '');
+      row.innerHTML = `<span>${state.scores[i] === maxScore ? '👑 ' : ''}${name}</span><span>${state.scores[i]}/${state.questions.length}</span>`;
+      wrap.appendChild(row);
+    });
+    const tie = state.scores.every(s => s === maxScore);
+    $('#result-title').textContent = tie ? 'تعادل!' : `${state.playerNames[state.scores.indexOf(maxScore)]} هو الـ KiNG!`;
   }
 
-
-  loadQuestion();
-
+  showScreen('screen-result');
 }
 
-
-// =====================================
-// 📱 تسليم الموبايل
-// =====================================
-
-function showPassScreen() {
-
-  clearInterval(timerInterval);
-
-  document
-    .getElementById("nextPlayer")
-    .textContent =
-      players[currentPlayer].name;
-
-  showScreen("passScreen");
-
-}
-
-
-function continueTurn() {
-
-  showScreen("quizScreen");
-
-  loadQuestion();
-
-}
-
-
-// =====================================
-// 🏆 النتيجة
-// =====================================
-
-function finishGame() {
-
-  clearInterval(timerInterval);
-
-  showScreen("resultScreen");
-
-
-  const resultTitle =
-    document.getElementById(
-      "resultTitle"
-    );
-
-  const resultText =
-    document.getElementById(
-      "resultText"
-    );
-
-
-  if (gameMode === "solo") {
-
-    resultTitle.textContent =
-      "🏆 أحسنت!";
-
-    resultText.innerHTML = `
-      نتيجتك النهائية
-      <br><br>
-
-      <strong>
-        ${players[0].score}
-      </strong>
-
-      نقطة 🔥
-    `;
-
-    return;
-
-  }
-
-
-  const p1 = players[0];
-
-  const p2 = players[1];
-
-
-  if (p1.score > p2.score) {
-
-    resultTitle.textContent =
-      `👑 ${p1.name} هو الـ KiNG!`;
-
-  }
-
-  else if (p2.score > p1.score) {
-
-    resultTitle.textContent =
-      `👑 ${p2.name} هو الـ KiNG!`;
-
-  }
-
-  else {
-
-    resultTitle.textContent =
-      "🤝 تعادل!";
-
-  }
-
-
-  resultText.innerHTML = `
-
-    <div>
-      👑 ${p1.name}
-      <br>
-      <strong>
-        ${p1.score}
-      </strong>
-      نقطة
-    </div>
-
-    <hr style="
-      border:0;
-      border-top:1px solid #333;
-      margin:15px 0;
-    ">
-
-    <div>
-      👑 ${p2.name}
-      <br>
-      <strong>
-        ${p2.score}
-      </strong>
-      نقطة
-    </div>
-
-  `;
-
-}
-
-
-// =====================================
-// 🚀 تشغيل اللعبة
-// =====================================
-
-showScreen("startScreen");
+$('#btn-again').addEventListener('click', () => {
+  showScreen('screen-category');
+});
