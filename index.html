@@ -1,306 +1,93 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
-
-  <title>KiNG QUIZ 👑</title>
-
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KiNG QUIZ 👑</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+<div class="stage">
+  <div class="frame">
+    <div class="panel">
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
 
-  <!-- الشاشة الرئيسية -->
-
-  <div id="startScreen" class="screen">
-
-    <div class="crown">👑</div>
-
-    <h1>
-      KiNG <span>QUIZ</span>
-    </h1>
-
-    <p class="subtitle">
-      فكّر بسرعة • جاوب صح • كن أنت الـ KiNG 👑
-    </p>
-
-    <div class="menu">
-
-      <button onclick="startGame('solo')">
-        👤 لاعب واحد
-      </button>
-
-      <button onclick="showTwoPlayers()">
-        👥 لاعبان
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- شاشة أسماء اللاعبين -->
-
-  <div id="playersScreen" class="screen hidden">
-
-    <div class="game-logo">
-      👑 KiNG QUIZ
-    </div>
-
-    <h2>
-      مين هيلعب؟ 🎮
-    </h2>
-
-    <input
-      id="player1"
-      type="text"
-      placeholder="اسم اللاعب الأول"
-      maxlength="15">
-
-    <input
-      id="player2"
-      type="text"
-      placeholder="اسم اللاعب الثاني"
-      maxlength="15">
-
-    <button
-      class="main-btn"
-      onclick="startTwoPlayers()">
-
-      ابدأ اللعبة 🔥
-
-    </button>
-
-    <button
-      class="back-btn"
-      onclick="backHome()">
-
-      رجوع ←
-
-    </button>
-
-  </div>
-
-
-  <!-- شاشة الأقسام -->
-
-  <div id="categoryScreen" class="screen hidden">
-
-    <div class="game-logo">
-      👑 KiNG QUIZ
-    </div>
-
-    <h2>
-      اختار القسم 🎯
-    </h2>
-
-    <div class="categories">
-
-      <button onclick="selectCategory('football')">
-        ⚽
-        <span>كورة القدم</span>
-      </button>
-
-      <button onclick="selectCategory('history')">
-        🏛️
-        <span>تاريخ</span>
-      </button>
-
-      <button onclick="selectCategory('geography')">
-        🌍
-        <span>جغرافيا</span>
-      </button>
-
-      <button onclick="selectCategory('biology')">
-        🧬
-        <span>أحياء</span>
-      </button>
-
-      <button onclick="selectCategory('love')">
-        ❤️
-        <span>حب وعلاقات</span>
-      </button>
-
-      <button onclick="selectCategory('english')">
-        🇬🇧
-        <span>إنجليزي</span>
-      </button>
-
-      <button onclick="selectCategory('friends')">
-        😂
-        <span>قعدة صحاب</span>
-      </button>
-
-      <button onclick="selectCategory('politics')">
-        🏛️
-        <span>سياسة</span>
-      </button>
-
-      <button onclick="selectCategory('general')">
-        🧠
-        <span>معلومات عامة</span>
-      </button>
-
-      <button onclick="selectCategory('movies')">
-        🎬
-        <span>أفلام ومسلسلات</span>
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- شاشة الأسئلة -->
-
-  <div id="quizScreen" class="screen hidden">
-
-    <div class="quiz-top">
-
-      <div>
-
-        <small>الدور الحالي</small>
-
-        <strong id="currentPlayer">
-          اللاعب
-        </strong>
-
+      <!-- SCREEN: HOME -->
+      <div class="screen active" id="screen-home">
+        <div class="crown">👑</div>
+        <h1 class="title">KiNG QUIZ</h1>
+        <div class="tagline">فكّر بسرعة • جاوب صح • كن أنت الـ KiNG</div>
+        <div class="divider"></div>
+        <div style="font-size:14px; color:#cbb9a5; margin-bottom:16px; font-weight:700;">مين هيلعب؟</div>
+        <div class="stack">
+          <button class="choice-btn" data-players="1">👤 لاعب واحد <span class="arrow">◀</span></button>
+          <button class="choice-btn" data-players="2">👥 لاعبان <span class="arrow">◀</span></button>
+        </div>
       </div>
 
-      <div class="score">
+      <!-- SCREEN: CATEGORY -->
+      <div class="screen" id="screen-category">
+        <div class="crown" style="font-size:32px;">👑</div>
+        <h1 class="title" style="font-size:24px;">اختار القسم</h1>
+        <div class="tagline" style="margin-bottom:18px;">الأسئلة صعبة شوية… استعد 🔥</div>
+        <div class="cat-grid" id="cat-grid"></div>
+        <button class="ghost-btn" id="btn-back-home">رجوع ←</button>
+      </div>
 
-        ⭐
+      <!-- SCREEN: QUESTION -->
+      <div class="screen" id="screen-question">
+        <div class="top-row">
+          <span class="pill" id="turn-pill">دور اللاعب</span>
+          <span id="q-progress">السؤال 1 من 8</span>
+        </div>
+        <div class="timer-wrap">
+          <svg class="timer" width="56" height="56" viewBox="0 0 56 56">
+            <circle class="timer-bg" cx="28" cy="28" r="24"></circle>
+            <circle class="timer-fg" id="timer-circle" cx="28" cy="28" r="24" stroke-dasharray="151" stroke-dashoffset="0"></circle>
+          </svg>
+          <div class="timer-num" id="timer-num">15</div>
+        </div>
+        <div class="dots" id="dots"></div>
+        <div class="cat-tag" id="cat-tag">القسم</div>
+        <div class="question-text" id="question-text">السؤال</div>
+        <div class="options" id="options"></div>
+        <div class="next-wrap">
+          <button class="primary-btn" id="btn-next" style="width:100%;" disabled>السؤال التالي ◀</button>
+        </div>
+      </div>
 
-        <span id="score">
-          0
-        </span>
+      <!-- SCREEN: PASS DEVICE -->
+      <div class="screen" id="screen-pass">
+        <div style="margin-top:auto;"></div>
+        <div class="pass-icon">📱</div>
+        <div style="font-size:14px; color:#cbb9a5;">سلّم الموبايل لـ</div>
+        <div class="pass-name" id="pass-name">اللاعب 2</div>
+        <button class="primary-btn" id="btn-ready">أنا جاهز 🔥</button>
+        <div style="margin-bottom:auto;"></div>
+      </div>
 
+      <!-- SCREEN: RESULT -->
+      <div class="screen" id="screen-result">
+        <div style="margin-top:auto;"></div>
+        <div class="result-crown">👑</div>
+        <div class="result-title" id="result-title">النتيجة</div>
+        <div class="result-sub" id="result-sub">قسم اللعبة</div>
+        <div id="result-single">
+          <div class="result-score" id="result-score">0/8</div>
+          <div class="result-score-label">إجابات صح</div>
+        </div>
+        <div id="result-multi" style="display:none;" class="result-players"></div>
+        <button class="primary-btn" id="btn-again">العب تاني 🔥</button>
+        <div style="margin-bottom:auto;"></div>
       </div>
 
     </div>
-
-
-    <div class="progress">
-
-      <div id="progressBar"></div>
-
-    </div>
-
-
-    <div class="question-number">
-
-      السؤال
-
-      <span id="questionNumber">
-        1
-      </span>
-
-      من 10
-
-    </div>
-
-
-    <div class="timer">
-
-      ⏱️
-
-      <span id="timer">
-        15
-      </span>
-
-    </div>
-
-
-    <div class="question-box">
-
-      <h2 id="question">
-        السؤال
-      </h2>
-
-    </div>
-
-
-    <div
-      id="answers"
-      class="answers">
-    </div>
-
-
-    <button
-      id="nextBtn"
-      class="next-btn hidden"
-      onclick="nextQuestion()">
-
-      السؤال التالي →
-
-    </button>
-
   </div>
+</div>
 
-
-  <!-- شاشة تسليم الموبايل -->
-
-  <div id="passScreen" class="screen hidden">
-
-    <div class="pass-icon">
-      📱
-    </div>
-
-    <h1>
-      سلّم الموبايل
-    </h1>
-
-    <p>
-      دلوقتي دور:
-    </p>
-
-    <h2 id="nextPlayer">
-      اللاعب التالي
-    </h2>
-
-    <button
-      class="main-btn"
-      onclick="continueTurn()">
-
-      أنا جاهز 🔥
-
-    </button>
-
-  </div>
-
-
-  <!-- شاشة النتيجة -->
-
-  <div id="resultScreen" class="screen hidden">
-
-    <div class="winner-crown">
-      👑
-    </div>
-
-    <h1 id="resultTitle">
-      النتيجة
-    </h1>
-
-    <div id="resultText"></div>
-
-    <button
-      class="main-btn"
-      onclick="location.reload()">
-
-      العب تاني 🔥
-
-    </button>
-
-  </div>
-
-
-  <script src="script.js"></script>
-
+<script src="script.js"></script>
 </body>
-
 </html>
