@@ -1,631 +1,307 @@
-// ===============================
-// KiNG QUIZ - GAME ENGINE
-// ===============================
+// =====================================
+// 👑 KiNG QUIZ
+// =====================================
 
 let gameMode = "solo";
 
 let players = [
-  {
-    name: "Player 1",
-    score: 0
-  },
-  {
-    name: "Player 2",
-    score: 0
-  }
+  { name: "اللاعب الأول", score: 0 },
+  { name: "اللاعب الثاني", score: 0 }
 ];
 
 let currentPlayer = 0;
-
 let selectedCategory = "";
-
 let questions = [];
-
 let questionIndex = 0;
-
 let answered = false;
-
 let timerInterval;
-
 let timeLeft = 15;
 
 
-// ===============================
-// QUESTIONS
-// ===============================
+// =====================================
+// 🧠 بنك الأسئلة
+// =====================================
 
 const questionBank = {
 
   football: [
-
     {
-      q: "Who won the 2022 FIFA World Cup?",
-      answers: [
-        "France",
-        "Argentina",
-        "Brazil",
-        "Germany"
-      ],
+      q: "من فاز بكأس العالم 2022؟",
+      answers: ["فرنسا", "الأرجنتين", "البرازيل", "ألمانيا"],
       correct: 1
     },
-
     {
-      q: "Which club has won the most UEFA Champions League titles?",
-      answers: [
-        "Barcelona",
-        "Liverpool",
-        "Real Madrid",
-        "Bayern Munich"
-      ],
+      q: "من أكثر نادٍ فاز بدوري أبطال أوروبا؟",
+      answers: ["برشلونة", "ليفربول", "ريال مدريد", "بايرن ميونخ"],
       correct: 2
     },
-
     {
-      q: "How many players are on the field for one football team?",
-      answers: [
-        "9",
-        "10",
-        "11",
-        "12"
-      ],
+      q: "كم لاعبًا يشارك من الفريق الواحد داخل الملعب؟",
+      answers: ["9", "10", "11", "12"],
       correct: 2
     },
-
     {
-      q: "Which country won the 2018 FIFA World Cup?",
-      answers: [
-        "Germany",
-        "France",
-        "Brazil",
-        "Spain"
-      ],
+      q: "من فاز بكأس العالم 2018؟",
+      answers: ["ألمانيا", "فرنسا", "البرازيل", "إسبانيا"],
       correct: 1
     },
-
     {
-      q: "Who is known as the King of Football?",
-      answers: [
-        "Messi",
-        "Maradona",
-        "Pelé",
-        "Ronaldo"
-      ],
+      q: "من اللاعب المعروف بلقب ملك كرة القدم؟",
+      answers: ["ميسي", "مارادونا", "بيليه", "رونالدو"],
       correct: 2
     },
-
     {
-      q: "Which player is famous for the number 7 shirt at Manchester United?",
-      answers: [
-        "Cristiano Ronaldo",
-        "Sergio Ramos",
-        "Xavi",
-        "Kaká"
-      ],
+      q: "أي منتخب فاز بأكبر عدد من بطولات كأس العالم؟",
+      answers: ["البرازيل", "ألمانيا", "إيطاليا", "الأرجنتين"],
       correct: 0
     },
-
     {
-      q: "Which country has won the most FIFA World Cups?",
-      answers: [
-        "Brazil",
-        "Germany",
-        "Italy",
-        "Argentina"
-      ],
-      correct: 0
+      q: "كم دقيقة تستغرق مباراة كرة القدم الأساسية؟",
+      answers: ["60", "75", "90", "120"],
+      correct: 2
     },
-
     {
-      q: "How long is a standard football match?",
-      answers: [
-        "60 minutes",
-        "70 minutes",
-        "80 minutes",
-        "90 minutes"
-      ],
-      correct: 3
-    },
-
-    {
-      q: "Which card means a player is sent off?",
-      answers: [
-        "Yellow",
-        "Red",
-        "Blue",
-        "Green"
-      ],
+      q: "ما لون البطاقة التي تعني طرد اللاعب؟",
+      answers: ["الصفراء", "الحمراء", "الزرقاء", "الخضراء"],
       correct: 1
     },
-
     {
-      q: "Which country hosted the 2022 FIFA World Cup?",
-      answers: [
-        "Qatar",
-        "Russia",
-        "UAE",
-        "Saudi Arabia"
-      ],
-      correct: 0
+      q: "أين أقيم كأس العالم 2022؟",
+      answers: ["روسيا", "قطر", "الإمارات", "السعودية"],
+      correct: 1
+    },
+    {
+      q: "من فاز بالكرة الذهبية 2022؟",
+      answers: ["ليونيل ميسي", "كريم بنزيما", "هالاند", "مبابي"],
+      correct: 1
     }
-
   ],
 
 
   history: [
-
     {
-      q: "Who built the Great Pyramid of Giza?",
-      answers: [
-        "Ramses II",
-        "Khufu",
-        "Tutankhamun",
-        "Cleopatra"
-      ],
-      correct: 1
-    },
-
-    {
-      q: "Who was the first president of the United States?",
-      answers: [
-        "Abraham Lincoln",
-        "George Washington",
-        "Thomas Jefferson",
-        "John Adams"
-      ],
-      correct: 1
-    },
-
-    {
-      q: "In which country did the ancient Olympic Games begin?",
-      answers: [
-        "Italy",
-        "Egypt",
-        "Greece",
-        "Turkey"
-      ],
-      correct: 2
-    },
-
-    {
-      q: "Who discovered the tomb of Tutankhamun?",
-      answers: [
-        "Howard Carter",
-        "Napoleon",
-        "Julius Caesar",
-        "Herodotus"
-      ],
+      q: "من بنى الهرم الأكبر؟",
+      answers: ["خوفو", "رمسيس الثاني", "توت عنخ آمون", "تحتمس الثالث"],
       correct: 0
     },
-
     {
-      q: "The Roman Empire was centered around which city?",
-      answers: [
-        "Athens",
-        "Rome",
-        "Paris",
-        "London"
-      ],
+      q: "أين بدأت الألعاب الأولمبية القديمة؟",
+      answers: ["مصر", "اليونان", "إيطاليا", "تركيا"],
       correct: 1
     },
-
     {
-      q: "Who was known as the Maid of Orléans?",
-      answers: [
-        "Joan of Arc",
-        "Cleopatra",
-        "Marie Curie",
-        "Queen Victoria"
-      ],
+      q: "من اكتشف مقبرة توت عنخ آمون؟",
+      answers: ["نابليون", "هوارد كارتر", "هيرودوت", "جوليوس قيصر"],
+      correct: 1
+    },
+    {
+      q: "ما عاصمة الإمبراطورية الرومانية؟",
+      answers: ["أثينا", "روما", "باريس", "لندن"],
+      correct: 1
+    },
+    {
+      q: "من هي كليوباترا؟",
+      answers: ["ملكة مصرية", "ملكة إنجليزية", "ملكة فرنسية", "إمبراطورة رومانية"],
       correct: 0
     },
-
     {
-      q: "The pyramids were mainly built as what?",
-      answers: [
-        "Schools",
-        "Tombs",
-        "Markets",
-        "Fortresses"
-      ],
-      correct: 1
-    },
-
-    {
-      q: "Who was the famous Egyptian queen associated with Julius Caesar?",
-      answers: [
-        "Nefertiti",
-        "Cleopatra",
-        "Hatshepsut",
-        "Nefertari"
-      ],
-      correct: 1
-    },
-
-    {
-      q: "Which civilization created democracy in ancient Athens?",
-      answers: [
-        "Greek",
-        "Roman",
-        "Persian",
-        "Egyptian"
-      ],
+      q: "أين قامت الحضارة الفرعونية؟",
+      answers: ["مصر", "الصين", "اليونان", "الهند"],
       correct: 0
     },
-
     {
-      q: "Who was Napoleon Bonaparte?",
-      answers: [
-        "French military leader",
-        "British king",
-        "Roman emperor",
-        "Egyptian pharaoh"
-      ],
+      q: "من هو نابليون بونابرت؟",
+      answers: ["قائد فرنسي", "ملك إنجليزي", "فرعون مصري", "فيلسوف يوناني"],
+      correct: 0
+    },
+    {
+      q: "ما الحضارة التي بنت الكولوسيوم؟",
+      answers: ["الرومانية", "المصرية", "الفارسية", "الصينية"],
+      correct: 0
+    },
+    {
+      q: "من كان أول رئيس للولايات المتحدة؟",
+      answers: ["أبراهام لينكولن", "جورج واشنطن", "توماس جيفرسون", "جون آدامز"],
+      correct: 1
+    },
+    {
+      q: "ما المدينة التي كانت مركز الحضارة اليونانية القديمة؟",
+      answers: ["أثينا", "روما", "باريس", "برلين"],
       correct: 0
     }
-
   ],
 
 
   geography: [
-
     {
-      q: "What is the largest country in the world by area?",
-      answers: [
-        "Canada",
-        "China",
-        "Russia",
-        "USA"
-      ],
+      q: "ما أكبر دولة في العالم من حيث المساحة؟",
+      answers: ["كندا", "الصين", "روسيا", "الولايات المتحدة"],
       correct: 2
     },
-
     {
-      q: "What is the capital of Egypt?",
-      answers: [
-        "Giza",
-        "Cairo",
-        "Alexandria",
-        "Luxor"
-      ],
+      q: "ما عاصمة مصر؟",
+      answers: ["الجيزة", "القاهرة", "الإسكندرية", "الأقصر"],
       correct: 1
     },
-
     {
-      q: "Which is the largest ocean?",
-      answers: [
-        "Atlantic",
-        "Indian",
-        "Pacific",
-        "Arctic"
-      ],
+      q: "ما أكبر محيط في العالم؟",
+      answers: ["الأطلسي", "الهندي", "الهادئ", "المتجمد الشمالي"],
       correct: 2
     },
-
     {
-      q: "Which country is famous for the Eiffel Tower?",
-      answers: [
-        "Italy",
-        "France",
-        "Spain",
-        "Germany"
-      ],
+      q: "في أي دولة يوجد برج إيفل؟",
+      answers: ["إيطاليا", "فرنسا", "إسبانيا", "ألمانيا"],
       correct: 1
     },
-
     {
-      q: "Which continent is Egypt in?",
-      answers: [
-        "Asia",
-        "Europe",
-        "Africa",
-        "South America"
-      ],
+      q: "في أي قارة تقع مصر؟",
+      answers: ["آسيا", "أوروبا", "أفريقيا", "أمريكا الجنوبية"],
       correct: 2
     },
-
     {
-      q: "What is the capital of Japan?",
-      answers: [
-        "Seoul",
-        "Tokyo",
-        "Beijing",
-        "Bangkok"
-      ],
+      q: "ما عاصمة اليابان؟",
+      answers: ["سيول", "طوكيو", "بكين", "بانكوك"],
       correct: 1
     },
-
     {
-      q: "Which desert is the largest hot desert?",
-      answers: [
-        "Gobi",
-        "Sahara",
-        "Arabian",
-        "Kalahari"
-      ],
+      q: "ما أكبر صحراء حارة في العالم؟",
+      answers: ["جوبي", "الصحراء الكبرى", "العربية", "كالاهاري"],
       correct: 1
     },
-
     {
-      q: "Which country has the city of Barcelona?",
-      answers: [
-        "Portugal",
-        "Spain",
-        "Italy",
-        "France"
-      ],
+      q: "في أي دولة تقع مدينة برشلونة؟",
+      answers: ["البرتغال", "إسبانيا", "إيطاليا", "فرنسا"],
       correct: 1
     },
-
     {
-      q: "What is the capital of Italy?",
-      answers: [
-        "Rome",
-        "Milan",
-        "Venice",
-        "Naples"
-      ],
+      q: "ما عاصمة إيطاليا؟",
+      answers: ["روما", "ميلانو", "البندقية", "نابولي"],
       correct: 0
     },
-
     {
-      q: "Which river runs through Egypt?",
-      answers: [
-        "Amazon",
-        "Nile",
-        "Danube",
-        "Thames"
-      ],
+      q: "ما النهر الذي يمر في مصر؟",
+      answers: ["الأمازون", "النيل", "الدانوب", "التايمز"],
       correct: 1
     }
-
   ],
 
 
   biology: [
-
     {
-      q: "What is the basic unit of life?",
-      answers: [
-        "Atom",
-        "Cell",
-        "Organ",
-        "Tissue"
-      ],
+      q: "ما الوحدة الأساسية للحياة؟",
+      answers: ["الذرة", "الخلية", "النسيج", "العضو"],
       correct: 1
     },
-
     {
-      q: "Which organ pumps blood around the body?",
-      answers: [
-        "Liver",
-        "Brain",
-        "Heart",
-        "Lung"
-      ],
+      q: "ما العضو المسؤول عن ضخ الدم؟",
+      answers: ["الكبد", "المخ", "القلب", "الرئة"],
       correct: 2
     },
-
     {
-      q: "What gas do humans need to breathe?",
-      answers: [
-        "Carbon dioxide",
-        "Oxygen",
-        "Nitrogen",
-        "Hydrogen"
-      ],
+      q: "ما الغاز الذي يحتاجه الإنسان للتنفس؟",
+      answers: ["ثاني أكسيد الكربون", "الأكسجين", "النيتروجين", "الهيدروجين"],
       correct: 1
     },
-
     {
-      q: "Which organ is mainly responsible for thinking?",
-      answers: [
-        "Heart",
-        "Brain",
-        "Liver",
-        "Kidney"
-      ],
+      q: "ما العضو المسؤول بشكل أساسي عن التفكير؟",
+      answers: ["القلب", "المخ", "الكبد", "المعدة"],
       correct: 1
     },
-
     {
-      q: "Plants use sunlight to make food through what process?",
-      answers: [
-        "Respiration",
-        "Photosynthesis",
-        "Digestion",
-        "Fermentation"
-      ],
+      q: "ما العملية التي تصنع بها النباتات غذاءها باستخدام الضوء؟",
+      answers: ["التنفس", "البناء الضوئي", "الهضم", "التخمر"],
       correct: 1
     },
-
     {
-      q: "How many chromosomes do humans normally have?",
-      answers: [
-        "23",
-        "46",
-        "44",
-        "48"
-      ],
+      q: "كم عدد الكروموسومات الطبيعية لدى الإنسان؟",
+      answers: ["23", "46", "44", "48"],
       correct: 1
     },
-
     {
-      q: "Which blood cells help fight infections?",
-      answers: [
-        "Red blood cells",
-        "White blood cells",
-        "Platelets",
-        "Plasma"
-      ],
+      q: "ما خلايا الدم التي تساعد على مقاومة العدوى؟",
+      answers: ["الحمراء", "البيضاء", "الصفائح", "البلازما"],
       correct: 1
     },
-
     {
-      q: "DNA stands for what?",
-      answers: [
-        "Deoxyribonucleic acid",
-        "Dynamic Nuclear Acid",
-        "Deoxygenated Nucleic Atom",
-        "None"
-      ],
+      q: "ماذا يعني DNA؟",
+      answers: ["الحمض النووي", "السكر النووي", "البروتين النووي", "لا شيء مما سبق"],
       correct: 0
     },
-
     {
-      q: "Which organ filters waste from the blood?",
-      answers: [
-        "Heart",
-        "Kidney",
-        "Lung",
-        "Stomach"
-      ],
+      q: "ما العضوان المسؤولان بشكل أساسي عن تنقية الدم؟",
+      answers: ["الرئتان", "الكليتان", "القلب", "المعدة"],
       correct: 1
     },
-
     {
-      q: "What is the largest organ of the human body?",
-      answers: [
-        "Heart",
-        "Liver",
-        "Skin",
-        "Brain"
-      ],
+      q: "ما أكبر عضو في جسم الإنسان؟",
+      answers: ["القلب", "الكبد", "الجلد", "المخ"],
       correct: 2
     }
-
   ],
 
 
   love: [
-
     {
-      q: "What is usually important in a healthy relationship?",
-      answers: [
-        "Trust",
-        "Lies",
-        "Jealousy",
-        "Ignoring"
-      ],
+      q: "ما أهم شيء لبناء علاقة صحية؟",
+      answers: ["الثقة", "الكذب", "الغيرة", "التجاهل"],
       correct: 0
     },
-
     {
-      q: "Which is a good way to solve an argument?",
-      answers: [
-        "Shouting",
-        "Ignoring forever",
-        "Calm communication",
-        "Blocking"
-      ],
+      q: "ما أفضل طريقة لحل الخلاف؟",
+      answers: ["الصوت العالي", "التجاهل", "الحوار الهادئ", "الخصام"],
       correct: 2
     },
-
     {
-      q: "What helps build trust?",
-      answers: [
-        "Honesty",
-        "Secrets",
-        "Lies",
-        "Manipulation"
-      ],
+      q: "ما الذي يساعد على بناء الثقة؟",
+      answers: ["الصراحة", "الأسرار", "الكذب", "التلاعب"],
       correct: 0
     },
-
     {
-      q: "A healthy relationship should include:",
-      answers: [
-        "Respect",
-        "Control",
-        "Fear",
-        "Pressure"
-      ],
+      q: "العلاقة الصحية يجب أن تحتوي على:",
+      answers: ["احترام", "تحكم", "خوف", "ضغط"],
       correct: 0
     },
-
     {
-      q: "What is an important part of communication?",
-      answers: [
-        "Listening",
-        "Interrupting",
-        "Ignoring",
-        "Shouting"
-      ],
+      q: "ما أهم جزء في التواصل؟",
+      answers: ["الاستماع", "المقاطعة", "التجاهل", "الصراخ"],
       correct: 0
     },
-
     {
-      q: "Which action can show appreciation?",
-      answers: [
-        "Thanking someone",
-        "Ignoring them",
-        "Insulting them",
-        "Lying"
-      ],
+      q: "كيف يمكنك إظهار تقديرك لشخص تحبه؟",
+      answers: ["شكره", "تجاهله", "إهانته", "الكذب عليه"],
       correct: 0
     },
-
     {
-      q: "What is a healthy boundary?",
-      answers: [
-        "Respecting personal limits",
-        "Controlling someone",
-        "Reading private messages",
-        "Forcing decisions"
-      ],
+      q: "ما معنى الحدود الصحية في العلاقة؟",
+      answers: ["احترام حدود الطرف الآخر", "التحكم فيه", "التجسس عليه", "إجباره"],
       correct: 0
     },
-
     {
-      q: "When someone is upset, a helpful response is:",
-      answers: [
-        "Listen",
-        "Mock them",
-        "Ignore them",
-        "Start another argument"
-      ],
+      q: "لو الشخص الذي أمامك متضايق، الأفضل أن:",
+      answers: ["تسمعه", "تسخر منه", "تتجاهله", "تبدأ خناقة"],
       correct: 0
     },
-
     {
-      q: "What is usually stronger than jealousy?",
-      answers: [
-        "Trust",
-        "Anger",
-        "Fear",
-        "Suspicion"
-      ],
+      q: "ما الذي يقوي العلاقة أكثر؟",
+      answers: ["الثقة", "الشك", "الخوف", "الغيرة"],
       correct: 0
     },
-
     {
-      q: "A good relationship should make both people feel:",
-      answers: [
-        "Respected",
-        "Controlled",
-        "Afraid",
-        "Trapped"
-      ],
+      q: "العلاقة الجيدة تجعل الطرفين يشعران بـ:",
+      answers: ["الاحترام", "الخوف", "التحكم", "الضغط"],
       correct: 0
     }
-
   ],
 
 
   english: [
-
     {
-      q: "What is the opposite of 'easy'?",
-      answers: [
-        "Simple",
-        "Hard",
-        "Fast",
-        "Small"
-      ],
+      q: "ما عكس كلمة Easy؟",
+      answers: ["سهل", "صعب", "سريع", "صغير"],
       correct: 1
     },
-
     {
-      q: "Choose the correct sentence:",
+      q: "اختر الجملة الصحيحة:",
       answers: [
         "She go to school.",
         "She goes to school.",
@@ -634,572 +310,327 @@ const questionBank = {
       ],
       correct: 1
     },
-
     {
-      q: "What is the plural of 'child'?",
-      answers: [
-        "Childs",
-        "Children",
-        "Childes",
-        "Childrens"
-      ],
+      q: "ما جمع كلمة Child؟",
+      answers: ["Childs", "Children", "Childes", "Childrens"],
       correct: 1
     },
-
     {
-      q: "What does 'beautiful' mean?",
-      answers: [
-        "Ugly",
-        "Very attractive",
-        "Angry",
-        "Fast"
-      ],
+      q: "ما معنى كلمة Beautiful؟",
+      answers: ["قبيح", "جميل", "غاضب", "سريع"],
       correct: 1
     },
-
     {
-      q: "Choose the correct past tense of 'go':",
-      answers: [
-        "Goed",
-        "Gone",
-        "Went",
-        "Going"
-      ],
+      q: "ما الماضي من كلمة Go؟",
+      answers: ["Goed", "Gone", "Went", "Going"],
       correct: 2
     },
-
     {
-      q: "What is the opposite of 'expensive'?",
-      answers: [
-        "Cheap",
-        "Rich",
-        "Large",
-        "Heavy"
-      ],
+      q: "ما عكس كلمة Expensive؟",
+      answers: ["رخيص", "غني", "كبير", "ثقيل"],
       correct: 0
     },
-
     {
-      q: "Which word is a noun?",
-      answers: [
-        "Run",
-        "Beautiful",
-        "Book",
-        "Quickly"
-      ],
+      q: "أي كلمة من الآتي اسم Noun؟",
+      answers: ["Run", "Beautiful", "Book", "Quickly"],
       correct: 2
     },
-
     {
-      q: "What does 'happy' mean?",
-      answers: [
-        "Sad",
-        "Joyful",
-        "Angry",
-        "Tired"
-      ],
+      q: "ما معنى كلمة Happy؟",
+      answers: ["حزين", "سعيد", "غاضب", "متعب"],
       correct: 1
     },
-
     {
-      q: "Choose the correct word: I ___ football every Friday.",
-      answers: [
-        "play",
-        "plays",
-        "playing",
-        "played"
-      ],
+      q: "اختر الكلمة الصحيحة: I ___ football every Friday.",
+      answers: ["play", "plays", "playing", "played"],
       correct: 0
     },
-
     {
-      q: "What is the opposite of 'early'?",
-      answers: [
-        "Late",
-        "Fast",
-        "Quick",
-        "Soon"
-      ],
+      q: "ما عكس كلمة Early؟",
+      answers: ["Late", "Fast", "Quick", "Soon"],
       correct: 0
     }
-
   ],
 
 
   friends: [
-
     {
-      q: "Who is most likely to be late?",
-      answers: [
-        "The sleepy one",
-        "The organized one",
-        "The early one",
-        "Nobody"
-      ],
+      q: "مين غالبًا بيتأخر على الخروجة؟ 😂",
+      answers: ["صاحب النوم", "المنظم", "اللي بييجي بدري", "محدش"],
       correct: 0
     },
-
     {
-      q: "Who usually knows the latest gossip?",
-      answers: [
-        "The quiet one",
-        "The gossip expert",
-        "The teacher",
-        "Nobody"
-      ],
+      q: "مين غالبًا عارف آخر الأخبار بين الصحاب؟ 👀",
+      answers: ["الهادئ", "خبير الأخبار", "المدرس", "محدش"],
       correct: 1
     },
-
     {
-      q: "What usually makes a group hangout better?",
-      answers: [
-        "Good vibes",
-        "Arguments",
-        "Silence",
-        "Complaining"
-      ],
+      q: "إيه اللي بيخلي القعدة أحلى؟",
+      answers: ["الضحك والجو الحلو", "الخناقات", "السكوت", "الزهق"],
       correct: 0
     },
-
     {
-      q: "Who is most likely to forget their phone?",
-      answers: [
-        "The distracted friend",
-        "The organized friend",
-        "The responsible friend",
-        "Nobody"
-      ],
+      q: "مين أكتر واحد ممكن ينسى موبايله؟",
+      answers: ["السرحان", "المنظم", "المسؤول", "محدش"],
       correct: 0
     },
-
     {
-      q: "What's a classic thing friends do?",
-      answers: [
-        "Make jokes",
-        "Never talk",
-        "Avoid each other",
-        "Study all night"
-      ],
+      q: "إيه أكتر حاجة بتحصل في قعدة الصحاب؟",
+      answers: ["الهزار", "السكوت", "المذاكرة", "النوم"],
       correct: 0
     },
-
     {
-      q: "Who is usually the first person to suggest food?",
-      answers: [
-        "The hungry friend",
-        "The sleepy friend",
-        "The quiet friend",
-        "Nobody"
-      ],
+      q: "مين أول واحد غالبًا يقول: ناكل إيه؟ 😂",
+      answers: ["الجعان", "النايم", "الهادئ", "محدش"],
       correct: 0
     },
-
     {
-      q: "What's essential for a good friends' night?",
-      answers: [
-        "Fun",
-        "Arguments",
-        "Boredom",
-        "Silence"
-      ],
+      q: "إيه أهم حاجة في قعدة صحاب حلوة؟",
+      answers: ["الضحك", "الخناق", "الملل", "السكوت"],
       correct: 0
     },
-
     {
-      q: "Who usually says 'I'm coming' but arrives late?",
-      answers: [
-        "The late friend",
-        "The early friend",
-        "The organized friend",
-        "Nobody"
-      ],
+      q: "مين بيقول أنا جاي وهو لسه في البيت؟ 😂",
+      answers: ["صاحب المواعيد", "المنظم", "البدري", "محدش"],
       correct: 0
     },
-
     {
-      q: "What do friends often share?",
-      answers: [
-        "Memories",
-        "Nothing",
-        "Arguments only",
-        "Secrets with everyone"
-      ],
+      q: "الصحاب الحقيقيين غالبًا بيشاركوا:",
+      answers: ["الذكريات", "ولا حاجة", "الخناقات فقط", "كل أسرار الناس"],
       correct: 0
     },
-
     {
-      q: "What's the best thing about a good friend?",
-      answers: [
-        "Trust",
-        "Competition",
-        "Jealousy",
-        "Drama"
-      ],
+      q: "إيه أهم صفة في الصاحب الجدع؟",
+      answers: ["الجدعنة والثقة", "الغيرة", "الدراما", "المنافسة"],
       correct: 0
     }
-
   ],
 
 
   politics: [
-
     {
-      q: "What is a democracy?",
+      q: "ما معنى الديمقراطية؟",
       answers: [
-        "Rule by the people",
-        "Rule by one person only",
-        "Rule by the army",
-        "Rule without elections"
+        "حكم الشعب",
+        "حكم شخص واحد دائمًا",
+        "حكم الجيش",
+        "الحكم بدون انتخابات"
       ],
       correct: 0
     },
-
     {
-      q: "What is a constitution?",
+      q: "ما هو الدستور؟",
       answers: [
-        "A country's fundamental legal framework",
-        "A sports rule",
-        "A map",
-        "A tax receipt"
+        "الإطار القانوني الأساسي للدولة",
+        "خريطة",
+        "قانون رياضي",
+        "وثيقة سفر"
       ],
       correct: 0
     },
-
     {
-      q: "What does UN stand for?",
+      q: "ماذا تعني كلمة UN؟",
       answers: [
-        "United Nations",
-        "Universal Network",
-        "United Navy",
-        "Union Nation"
+        "الأمم المتحدة",
+        "شبكة عالمية",
+        "اتحاد دولي",
+        "لا شيء"
       ],
       correct: 0
     },
-
     {
-      q: "What is an election?",
+      q: "ما هي الانتخابات؟",
       answers: [
-        "A process of choosing representatives",
-        "A court case",
-        "A military exercise",
-        "A trade agreement"
+        "عملية اختيار ممثلين أو مسؤولين",
+        "محكمة",
+        "تدريب عسكري",
+        "اتفاق تجاري"
       ],
       correct: 0
     },
-
     {
-      q: "What is a parliament?",
+      q: "ما هو البرلمان؟",
       answers: [
-        "A legislative body",
-        "A hospital",
-        "A court",
-        "A bank"
+        "هيئة تشريعية",
+        "مستشفى",
+        "محكمة",
+        "بنك"
       ],
       correct: 0
     },
-
     {
-      q: "What does a president usually lead?",
+      q: "ما هي الدبلوماسية؟",
       answers: [
-        "The executive branch or state, depending on the system",
-        "A football team",
-        "A school",
-        "A company only"
+        "إدارة العلاقات بين الدول",
+        "لعبة رياضية",
+        "كتابة روايات",
+        "إدارة شركة"
       ],
       correct: 0
     },
-
     {
-      q: "What is diplomacy?",
+      q: "ما هو الحزب السياسي؟",
       answers: [
-        "Managing relations between countries",
-        "Playing sports",
-        "Writing novels",
-        "Running a business"
+        "مجموعة منظمة لها أهداف سياسية",
+        "نادٍ رياضي",
+        "شركة",
+        "مدرسة"
       ],
       correct: 0
     },
-
     {
-      q: "What is a political party?",
+      q: "ماذا يعني التصويت؟",
       answers: [
-        "An organized group sharing political goals",
-        "A sports club",
-        "A company",
-        "A school"
+        "التعبير عن اختيار في انتخابات أو قرار",
+        "دفع الضرائب",
+        "توقيع عقد",
+        "رفع دعوى"
       ],
       correct: 0
     },
-
     {
-      q: "What is voting?",
+      q: "ما هو القانون؟",
       answers: [
-        "Expressing a choice in an election or decision",
-        "Signing a contract",
-        "Paying taxes",
-        "Going to court"
+        "قاعدة تفرضها وتنفذها سلطة مختصة",
+        "اقتراح",
+        "لعبة",
+        "رسالة"
       ],
       correct: 0
     },
-
     {
-      q: "What is a law?",
+      q: "ما المقصود بالعلاقات الدولية؟",
       answers: [
-        "A rule enforced by a governing authority",
-        "A suggestion",
-        "A game",
-        "A private message"
+        "العلاقات والتعاملات بين الدول",
+        "علاقات الأصدقاء",
+        "علاقات الشركات فقط",
+        "الرياضة"
       ],
       correct: 0
     }
-
   ],
 
 
   general: [
-
     {
-      q: "How many days are in a leap year?",
-      answers: [
-        "364",
-        "365",
-        "366",
-        "367"
-      ],
+      q: "كم يومًا في السنة الكبيسة؟",
+      answers: ["364", "365", "366", "367"],
       correct: 2
     },
-
     {
-      q: "What is the fastest land animal?",
-      answers: [
-        "Lion",
-        "Cheetah",
-        "Horse",
-        "Tiger"
-      ],
+      q: "ما أسرع حيوان بري؟",
+      answers: ["الأسد", "الفهد", "الحصان", "النمر"],
       correct: 1
     },
-
     {
-      q: "How many planets are in our Solar System?",
-      answers: [
-        "7",
-        "8",
-        "9",
-        "10"
-      ],
+      q: "كم عدد كواكب المجموعة الشمسية؟",
+      answers: ["7", "8", "9", "10"],
       correct: 1
     },
-
     {
-      q: "Which planet is known as the Red Planet?",
-      answers: [
-        "Venus",
-        "Mars",
-        "Jupiter",
-        "Mercury"
-      ],
+      q: "ما الكوكب المعروف بالكوكب الأحمر؟",
+      answers: ["الزهرة", "المريخ", "المشتري", "عطارد"],
       correct: 1
     },
-
     {
-      q: "How many colors are traditionally in a rainbow?",
-      answers: [
-        "5",
-        "6",
-        "7",
-        "8"
-      ],
+      q: "كم لونًا يوجد تقليديًا في قوس قزح؟",
+      answers: ["5", "6", "7", "8"],
       correct: 2
     },
-
     {
-      q: "What is the largest mammal?",
-      answers: [
-        "Elephant",
-        "Blue whale",
-        "Giraffe",
-        "Shark"
-      ],
+      q: "ما أكبر حيوان ثديي؟",
+      answers: ["الفيل", "الحوت الأزرق", "الزرافة", "الحوت القاتل"],
       correct: 1
     },
-
     {
-      q: "Which metal is liquid at room temperature?",
-      answers: [
-        "Iron",
-        "Mercury",
-        "Gold",
-        "Silver"
-      ],
+      q: "أي معدن يكون سائلًا في درجة حرارة الغرفة؟",
+      answers: ["الحديد", "الزئبق", "الذهب", "الفضة"],
       correct: 1
     },
-
     {
-      q: "How many sides does a hexagon have?",
-      answers: [
-        "5",
-        "6",
-        "7",
-        "8"
-      ],
+      q: "كم ضلعًا للشكل السداسي؟",
+      answers: ["5", "6", "7", "8"],
       correct: 1
     },
-
     {
-      q: "Which animal is known as man's best friend?",
-      answers: [
-        "Cat",
-        "Dog",
-        "Horse",
-        "Bird"
-      ],
+      q: "ما الحيوان المعروف بأنه أفضل صديق للإنسان؟",
+      answers: ["القطة", "الكلب", "الحصان", "العصفور"],
       correct: 1
     },
-
     {
-      q: "What is H2O?",
-      answers: [
-        "Oxygen",
-        "Water",
-        "Hydrogen",
-        "Salt"
-      ],
+      q: "ما هو H2O؟",
+      answers: ["الأكسجين", "الماء", "الهيدروجين", "الملح"],
       correct: 1
     }
-
   ],
 
 
   movies: [
-
     {
-      q: "Which movie features the character Jack Sparrow?",
-      answers: [
-        "Titanic",
-        "Pirates of the Caribbean",
-        "Avatar",
-        "The Matrix"
-      ],
+      q: "من هو جاك سبارو؟",
+      answers: ["شخصية من قراصنة الكاريبي", "شخصية من تايتانيك", "بطل أفاتار", "بطل ماتريكس"],
+      correct: 0
+    },
+    {
+      q: "من أخرج فيلم Titanic؟",
+      answers: ["جيمس كاميرون", "كريستوفر نولان", "ستيفن سبيلبرغ", "ريدلي سكوت"],
+      correct: 0
+    },
+    {
+      q: "من هو باتمان؟",
+      answers: ["بيتر باركر", "بروس واين", "كلارك كينت", "توني ستارك"],
       correct: 1
     },
-
     {
-      q: "Who directed Titanic?",
-      answers: [
-        "James Cameron",
-        "Christopher Nolan",
-        "Steven Spielberg",
-        "Ridley Scott"
-      ],
-      correct: 0
-    },
-
-    {
-      q: "Which movie features superheroes called Avengers?",
-      answers: [
-        "Marvel's The Avengers",
-        "Titanic",
-        "Gladiator",
-        "Joker"
-      ],
-      correct: 0
-    },
-
-    {
-      q: "Which character is known as Batman?",
-      answers: [
-        "Peter Parker",
-        "Bruce Wayne",
-        "Clark Kent",
-        "Tony Stark"
-      ],
+      q: "من هو بيتر باركر؟",
+      answers: ["سوبرمان", "سبايدرمان", "الرجل الحديدي", "باتمان"],
       correct: 1
     },
-
     {
-      q: "Which film features the character Harry Potter?",
-      answers: [
-        "Harry Potter",
-        "Avatar",
-        "Inception",
-        "Rocky"
-      ],
+      q: "من يحمل المطرقة ميولنير؟",
+      answers: ["ثور", "باتمان", "سبايدرمان", "هالك"],
       correct: 0
     },
-
     {
-      q: "Which superhero uses a shield?",
-      answers: [
-        "Iron Man",
-        "Captain America",
-        "Hulk",
-        "Thor"
-      ],
-      correct: 1
-    },
-
-    {
-      q: "Which movie is about a giant blue alien world called Pandora?",
-      answers: [
-        "Avatar",
-        "Joker",
-        "Titanic",
-        "Rocky"
-      ],
+      q: "من هو بطل سلسلة Harry Potter؟",
+      answers: ["هاري بوتر", "توني ستارك", "جاك سبارو", "بروس واين"],
       correct: 0
     },
-
     {
-      q: "Who is the superhero with the hammer Mjölnir?",
-      answers: [
-        "Thor",
-        "Batman",
-        "Spider-Man",
-        "Hulk"
-      ],
+      q: "أي فيلم تدور أحداثه في عالم Pandora؟",
+      answers: ["Avatar", "Titanic", "Joker", "Rocky"],
       correct: 0
     },
-
     {
-      q: "Which character is Peter Parker?",
-      answers: [
-        "Superman",
-        "Spider-Man",
-        "Iron Man",
-        "Batman"
-      ],
-      correct: 1
+      q: "من هو Captain America؟",
+      answers: ["ستيف روجرز", "توني ستارك", "ثور", "بيتر باركر"],
+      correct: 0
     },
-
     {
-      q: "Which movie character is famous for saying 'May the Force be with you'?",
-      answers: [
-        "Star Wars characters",
-        "Harry Potter",
-        "Batman",
-        "Rocky"
-      ],
+      q: "من هو الرجل الحديدي؟",
+      answers: ["توني ستارك", "بروس واين", "ستيف روجرز", "كلارك كينت"],
+      correct: 0
+    },
+    {
+      q: "أي سلسلة مشهورة تحتوي على شخصية Darth Vader؟",
+      answers: ["Star Wars", "Harry Potter", "Marvel", "Titanic"],
       correct: 0
     }
-
   ]
 
 };
 
 
-// ===============================
-// SCREEN SYSTEM
-// ===============================
+// =====================================
+// 🖥️ التنقل بين الشاشات
+// =====================================
 
 function showScreen(id) {
 
   document
     .querySelectorAll(".screen")
     .forEach(screen => {
-
       screen.classList.add("hidden");
-
     });
 
   document
@@ -1209,9 +640,9 @@ function showScreen(id) {
 }
 
 
-// ===============================
-// HOME
-// ===============================
+// =====================================
+// 👤 لاعب واحد
+// =====================================
 
 function startGame(mode) {
 
@@ -1219,31 +650,25 @@ function startGame(mode) {
 
   players = [
     {
-      name: "Player 1",
+      name: "اللاعب",
       score: 0
     },
     {
-      name: "Player 2",
+      name: "اللاعب الثاني",
       score: 0
     }
   ];
 
   currentPlayer = 0;
 
-  if (mode === "solo") {
-
-    players[0].name = "Player";
-
-    showScreen("categoryScreen");
-
-  }
+  showScreen("categoryScreen");
 
 }
 
 
-// ===============================
-// TWO PLAYERS
-// ===============================
+// =====================================
+// 👥 لاعبان
+// =====================================
 
 function showTwoPlayers() {
 
@@ -1267,10 +692,10 @@ function startTwoPlayers() {
       .trim();
 
   players[0].name =
-    p1 || "Player 1";
+    p1 || "اللاعب الأول";
 
   players[1].name =
-    p2 || "Player 2";
+    p2 || "اللاعب الثاني";
 
   players[0].score = 0;
 
@@ -1292,9 +717,9 @@ function backHome() {
 }
 
 
-// ===============================
-// CATEGORY
-// ===============================
+// =====================================
+// 🎯 اختيار القسم
+// =====================================
 
 function selectCategory(category) {
 
@@ -1311,9 +736,7 @@ function selectCategory(category) {
   questionIndex = 0;
 
   players.forEach(player => {
-
     player.score = 0;
-
   });
 
   showScreen("quizScreen");
@@ -1323,9 +746,9 @@ function selectCategory(category) {
 }
 
 
-// ===============================
-// SHUFFLE
-// ===============================
+// =====================================
+// 🔀 خلط الأسئلة
+// =====================================
 
 function shuffle(array) {
 
@@ -1354,9 +777,9 @@ function shuffle(array) {
 }
 
 
-// ===============================
-// LOAD QUESTION
-// ===============================
+// =====================================
+// ❓ تحميل السؤال
+// =====================================
 
 function loadQuestion() {
 
@@ -1366,13 +789,19 @@ function loadQuestion() {
 
   timeLeft = 15;
 
-  document
-    .getElementById("timer")
-    .textContent = timeLeft;
+  const timer =
+    document.getElementById("timer");
+
+  timer.textContent = timeLeft;
+
+  timer.style.borderColor = "";
+
+  timer.style.color = "";
 
   document
     .getElementById("nextBtn")
     .classList.add("hidden");
+
 
   const player =
     players[currentPlayer];
@@ -1387,15 +816,23 @@ function loadQuestion() {
     .textContent =
       player.score;
 
+
   document
     .getElementById("questionNumber")
     .textContent =
       questionIndex + 1;
 
+
   document
     .getElementById("progressBar")
     .style.width =
-      ((questionIndex + 1) / questions.length * 100) + "%";
+      (
+        (questionIndex + 1)
+        /
+        questions.length
+        *
+        100
+      ) + "%";
 
 
   const question =
@@ -1445,9 +882,9 @@ function loadQuestion() {
 }
 
 
-// ===============================
-// TIMER
-// ===============================
+// =====================================
+// ⏱️ المؤقت
+// =====================================
 
 function startTimer() {
 
@@ -1464,6 +901,7 @@ function startTimer() {
       timer.textContent =
         timeLeft;
 
+
       if (timeLeft <= 5) {
 
         timer.style.borderColor =
@@ -1473,6 +911,7 @@ function startTimer() {
           "#ff4d5d";
 
       }
+
 
       if (timeLeft <= 0) {
 
@@ -1486,6 +925,10 @@ function startTimer() {
 
 }
 
+
+// =====================================
+// ⌛ انتهاء الوقت
+// =====================================
 
 function timeOut() {
 
@@ -1501,6 +944,7 @@ function timeOut() {
     document.querySelectorAll(
       ".answer-btn"
     );
+
 
   buttons.forEach(
     (button, index) => {
@@ -1520,6 +964,7 @@ function timeOut() {
     }
   );
 
+
   document
     .getElementById("nextBtn")
     .classList.remove("hidden");
@@ -1527,9 +972,9 @@ function timeOut() {
 }
 
 
-// ===============================
-// ANSWER
-// ===============================
+// =====================================
+// ✅ فحص الإجابة
+// =====================================
 
 function checkAnswer(
   selected,
@@ -1552,13 +997,9 @@ function checkAnswer(
     );
 
 
-  buttons.forEach(
-    button => {
-
-      button.disabled = true;
-
-    }
-  );
+  buttons.forEach(button => {
+    button.disabled = true;
+  });
 
 
   if (
@@ -1569,14 +1010,12 @@ function checkAnswer(
       "correct"
     );
 
-    players[currentPlayer].score +=
-      100;
+    players[currentPlayer].score += 100;
 
-    // Speed bonus
+
     if (timeLeft >= 10) {
 
-      players[currentPlayer].score +=
-        50;
+      players[currentPlayer].score += 50;
 
     }
 
@@ -1602,6 +1041,7 @@ function checkAnswer(
     .textContent =
       players[currentPlayer].score;
 
+
   document
     .getElementById("nextBtn")
     .classList.remove("hidden");
@@ -1609,13 +1049,14 @@ function checkAnswer(
 }
 
 
-// ===============================
-// NEXT QUESTION
-// ===============================
+// =====================================
+// ➡️ السؤال التالي
+// =====================================
 
 function nextQuestion() {
 
   questionIndex++;
+
 
   if (
     questionIndex >= questions.length
@@ -1636,20 +1077,22 @@ function nextQuestion() {
 
     }
 
+
     finishGame();
 
     return;
 
   }
 
+
   loadQuestion();
 
 }
 
 
-// ===============================
-// PASS PHONE
-// ===============================
+// =====================================
+// 📱 تسليم الموبايل
+// =====================================
 
 function showPassScreen() {
 
@@ -1674,15 +1117,16 @@ function continueTurn() {
 }
 
 
-// ===============================
-// FINISH GAME
-// ===============================
+// =====================================
+// 🏆 النتيجة
+// =====================================
 
 function finishGame() {
 
   clearInterval(timerInterval);
 
   showScreen("resultScreen");
+
 
   const resultTitle =
     document.getElementById(
@@ -1698,15 +1142,17 @@ function finishGame() {
   if (gameMode === "solo") {
 
     resultTitle.textContent =
-      "🏆 GREAT JOB!";
+      "🏆 أحسنت!";
 
     resultText.innerHTML = `
+      نتيجتك النهائية
+      <br><br>
+
       <strong>
         ${players[0].score}
       </strong>
-      points
-      <br><br>
-      You completed the quiz!
+
+      نقطة 🔥
     `;
 
     return;
@@ -1714,35 +1160,29 @@ function finishGame() {
   }
 
 
-  const p1 =
-    players[0];
+  const p1 = players[0];
 
-  const p2 =
-    players[1];
+  const p2 = players[1];
 
 
   if (p1.score > p2.score) {
 
     resultTitle.textContent =
-      "👑 " +
-      p1.name +
-      " WINS!";
+      `👑 ${p1.name} هو الـ KiNG!`;
 
   }
 
   else if (p2.score > p1.score) {
 
     resultTitle.textContent =
-      "👑 " +
-      p2.name +
-      " WINS!";
+      `👑 ${p2.name} هو الـ KiNG!`;
 
   }
 
   else {
 
     resultTitle.textContent =
-      "🤝 DRAW!";
+      "🤝 تعادل!";
 
   }
 
@@ -1755,7 +1195,7 @@ function finishGame() {
       <strong>
         ${p1.score}
       </strong>
-      points
+      نقطة
     </div>
 
     <hr style="
@@ -1770,7 +1210,7 @@ function finishGame() {
       <strong>
         ${p2.score}
       </strong>
-      points
+      نقطة
     </div>
 
   `;
@@ -1778,8 +1218,8 @@ function finishGame() {
 }
 
 
-// ===============================
-// START
-// ===============================
+// =====================================
+// 🚀 تشغيل اللعبة
+// =====================================
 
 showScreen("startScreen");
