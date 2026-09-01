@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
   <title>KiNG QUIZ 👑</title>
 
@@ -11,26 +15,28 @@
 
 <body>
 
-  <!-- START SCREEN -->
+  <!-- الشاشة الرئيسية -->
 
   <div id="startScreen" class="screen">
 
     <div class="crown">👑</div>
 
-    <h1>KiNG <span>QUIZ</span></h1>
+    <h1>
+      KiNG <span>QUIZ</span>
+    </h1>
 
     <p class="subtitle">
-      Think Fast. Play Smart. Be The KiNG.
+      فكّر بسرعة • جاوب صح • كن أنت الـ KiNG 👑
     </p>
 
     <div class="menu">
 
       <button onclick="startGame('solo')">
-        👤 SOLO
+        👤 لاعب واحد
       </button>
 
       <button onclick="showTwoPlayers()">
-        👥 2 PLAYERS
+        👥 لاعبان
       </button>
 
     </div>
@@ -38,7 +44,7 @@
   </div>
 
 
-  <!-- PLAYERS SCREEN -->
+  <!-- شاشة أسماء اللاعبين -->
 
   <div id="playersScreen" class="screen hidden">
 
@@ -46,38 +52,42 @@
       👑 KiNG QUIZ
     </div>
 
-    <h2>Who's Playing?</h2>
+    <h2>
+      مين هيلعب؟ 🎮
+    </h2>
 
     <input
       id="player1"
       type="text"
-      placeholder="Player 1 name"
-      maxlength="15"
-    >
+      placeholder="اسم اللاعب الأول"
+      maxlength="15">
 
     <input
       id="player2"
       type="text"
-      placeholder="Player 2 name"
-      maxlength="15"
-    >
+      placeholder="اسم اللاعب الثاني"
+      maxlength="15">
 
     <button
       class="main-btn"
       onclick="startTwoPlayers()">
-      START GAME 🔥
+
+      ابدأ اللعبة 🔥
+
     </button>
 
     <button
       class="back-btn"
       onclick="backHome()">
-      ← Back
+
+      رجوع ←
+
     </button>
 
   </div>
 
 
-  <!-- CATEGORY SCREEN -->
+  <!-- شاشة الأقسام -->
 
   <div id="categoryScreen" class="screen hidden">
 
@@ -85,58 +95,60 @@
       👑 KiNG QUIZ
     </div>
 
-    <h2>Choose Your Category</h2>
+    <h2>
+      اختار القسم 🎯
+    </h2>
 
     <div class="categories">
 
       <button onclick="selectCategory('football')">
         ⚽
-        <span>Football</span>
+        <span>كورة القدم</span>
       </button>
 
       <button onclick="selectCategory('history')">
         🏛️
-        <span>History</span>
+        <span>تاريخ</span>
       </button>
 
       <button onclick="selectCategory('geography')">
         🌍
-        <span>Geography</span>
+        <span>جغرافيا</span>
       </button>
 
       <button onclick="selectCategory('biology')">
         🧬
-        <span>Biology</span>
+        <span>أحياء</span>
       </button>
 
       <button onclick="selectCategory('love')">
         ❤️
-        <span>Love</span>
+        <span>حب وعلاقات</span>
       </button>
 
       <button onclick="selectCategory('english')">
         🇬🇧
-        <span>English</span>
+        <span>إنجليزي</span>
       </button>
 
       <button onclick="selectCategory('friends')">
         😂
-        <span>Friends</span>
+        <span>قعدة صحاب</span>
       </button>
 
       <button onclick="selectCategory('politics')">
         🏛️
-        <span>Politics</span>
+        <span>سياسة</span>
       </button>
 
       <button onclick="selectCategory('general')">
         🧠
-        <span>General</span>
+        <span>معلومات عامة</span>
       </button>
 
       <button onclick="selectCategory('movies')">
         🎬
-        <span>Movies</span>
+        <span>أفلام ومسلسلات</span>
       </button>
 
     </div>
@@ -144,24 +156,30 @@
   </div>
 
 
-  <!-- QUIZ SCREEN -->
+  <!-- شاشة الأسئلة -->
 
   <div id="quizScreen" class="screen hidden">
 
     <div class="quiz-top">
 
       <div>
-        <small>PLAYER</small>
+
+        <small>الدور الحالي</small>
+
         <strong id="currentPlayer">
-          Player 1
+          اللاعب
         </strong>
+
       </div>
 
       <div class="score">
+
         ⭐
+
         <span id="score">
           0
         </span>
+
       </div>
 
     </div>
@@ -175,17 +193,22 @@
 
 
     <div class="question-number">
-      QUESTION
+
+      السؤال
+
       <span id="questionNumber">
         1
       </span>
-      / 10
+
+      من 10
+
     </div>
 
 
     <div class="timer">
 
       ⏱️
+
       <span id="timer">
         15
       </span>
@@ -196,7 +219,7 @@
     <div class="question-box">
 
       <h2 id="question">
-        Question
+        السؤال
       </h2>
 
     </div>
@@ -213,14 +236,14 @@
       class="next-btn hidden"
       onclick="nextQuestion()">
 
-      NEXT →
+      السؤال التالي →
 
     </button>
 
   </div>
 
 
-  <!-- PASS PHONE SCREEN -->
+  <!-- شاشة تسليم الموبايل -->
 
   <div id="passScreen" class="screen hidden">
 
@@ -228,28 +251,30 @@
       📱
     </div>
 
-    <h1>PASS THE PHONE</h1>
+    <h1>
+      سلّم الموبايل
+    </h1>
 
     <p>
-      It's now
+      دلوقتي دور:
     </p>
 
     <h2 id="nextPlayer">
-      Player 2
+      اللاعب التالي
     </h2>
 
     <button
       class="main-btn"
       onclick="continueTurn()">
 
-      I'M READY 🔥
+      أنا جاهز 🔥
 
     </button>
 
   </div>
 
 
-  <!-- RESULT SCREEN -->
+  <!-- شاشة النتيجة -->
 
   <div id="resultScreen" class="screen hidden">
 
@@ -258,7 +283,7 @@
     </div>
 
     <h1 id="resultTitle">
-      YOU WIN!
+      النتيجة
     </h1>
 
     <div id="resultText"></div>
@@ -267,7 +292,7 @@
       class="main-btn"
       onclick="location.reload()">
 
-      PLAY AGAIN 🔥
+      العب تاني 🔥
 
     </button>
 
@@ -277,4 +302,5 @@
   <script src="script.js"></script>
 
 </body>
+
 </html>
