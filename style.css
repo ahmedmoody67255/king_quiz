@@ -1,16 +1,27 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
 }
 
 body {
-    font-family: Arial, "Tahoma", sans-serif;
-    background: #0b0b12;
-    color: #fff;
-    min-height: 100vh;
+    font-family: Arial, Tahoma, sans-serif;
     direction: rtl;
+    background:
+        radial-gradient(circle at top, #241044 0%, #0b0814 45%, #050509 100%);
+    color: white;
+    min-height: 100vh;
 }
+
+/* =========================
+   GENERAL
+========================= */
 
 button,
 input {
@@ -18,59 +29,64 @@ input {
 }
 
 button {
+    border: 0;
     cursor: pointer;
-    border: none;
-}
-
-/* =========================
-   الشاشات
-========================= */
-
-.screen {
-    min-height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
 }
 
 .hidden {
     display: none !important;
 }
 
-.game-container {
+.screen {
+    min-height: 100vh;
     width: 100%;
-    max-width: 600px;
-    text-align: center;
+    padding: 25px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* =========================
-   اللوجو
+   MAIN CONTAINER
+========================= */
+
+.game-container,
+.quiz-container,
+.pass-box,
+.result-box {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+}
+
+/* =========================
+   LOGO
 ========================= */
 
 .game-logo {
-    font-size: 55px;
+    text-align: center;
+    font-size: 58px;
     font-weight: 900;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-    color: #ffd700;
+    color: #ffd21c;
     text-shadow:
-        0 0 10px rgba(255, 215, 0, 0.5),
-        0 0 30px rgba(255, 215, 0, 0.2);
+        0 0 8px #ffb700,
+        0 0 25px rgba(255, 183, 0, .5);
+    margin-bottom: 8px;
 }
 
 .game-subtitle {
-    color: #aaa;
-    font-size: 17px;
-    margin-bottom: 35px;
+    text-align: center;
+    color: #c8c2d5;
+    font-size: 16px;
+    margin-bottom: 30px;
 }
 
 /* =========================
-   الأزرار الرئيسية
+   MAIN BUTTONS
 ========================= */
 
 .main-buttons {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -78,14 +94,15 @@ button {
 
 .main-btn {
     width: 100%;
-    padding: 17px;
-    border-radius: 15px;
-    font-size: 18px;
+    min-height: 70px;
+    border-radius: 18px;
+    color: white;
+    font-size: 20px;
     font-weight: bold;
-    color: #fff;
-    background: linear-gradient(135deg, #6c2cff, #9b59ff);
-    box-shadow: 0 8px 25px rgba(108, 44, 255, 0.25);
-    transition: 0.2s;
+    background: linear-gradient(135deg, #7628ff, #a344ff);
+    border: 1px solid #b66cff;
+    box-shadow: 0 8px 25px rgba(126, 45, 255, .3);
+    transition: .2s;
 }
 
 .main-btn:hover {
@@ -93,56 +110,59 @@ button {
 }
 
 .main-btn:active {
-    transform: scale(0.97);
+    transform: scale(.97);
 }
 
 .secondary-btn {
-    background: #1b1b27;
+    background: #171521;
+    border-color: #40394e;
     box-shadow: none;
 }
 
 /* =========================
-   العناوين
+   TITLES
 ========================= */
 
 .title {
+    text-align: center;
     font-size: 30px;
-    margin-bottom: 25px;
-    font-weight: 800;
+    margin-bottom: 10px;
 }
 
 .small-text {
+    text-align: center;
     color: #aaa;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 /* =========================
-   إدخال أسماء اللاعبين
+   PLAYER INPUT
 ========================= */
 
 .player-input {
     width: 100%;
-    padding: 16px;
-    margin-bottom: 14px;
-    border-radius: 13px;
-    border: 1px solid #29293a;
-    background: #171722;
-    color: #fff;
-    outline: none;
+    height: 58px;
+    margin-bottom: 13px;
+    padding: 0 18px;
+    border-radius: 15px;
+    background: #12101b;
+    border: 1px solid #413957;
+    color: white;
     font-size: 17px;
-    text-align: right;
+    outline: none;
 }
 
 .player-input:focus {
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+    border-color: #a13cff;
+    box-shadow: 0 0 15px rgba(161, 60, 255, .2);
 }
 
 /* =========================
-   التصنيفات
+   CATEGORIES
 ========================= */
 
 .categories {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
@@ -151,174 +171,225 @@ button {
 .category-btn {
     min-height: 100px;
     border-radius: 18px;
-    background: #171722;
-    color: #fff;
-    border: 1px solid #29293a;
+    color: white;
+    background: #12111c;
+    border: 1px solid #493d60;
     font-size: 17px;
     font-weight: bold;
-    padding: 15px 8px;
-    transition: 0.2s;
+    padding: 10px;
+    transition: .2s;
 }
 
 .category-btn:hover {
+    border-color: #b13cff;
     transform: translateY(-3px);
-    border-color: #8b5cf6;
-    background: #211a32;
+    box-shadow: 0 5px 20px rgba(150, 50, 255, .2);
 }
 
 .category-btn:active {
-    transform: scale(0.96);
+    transform: scale(.96);
 }
 
 /* =========================
-   شاشة الأسئلة
+   QUIZ HEADER
 ========================= */
 
-.quiz-container {
+#quizScreen {
+    align-items: flex-start;
+    padding-top: 25px;
+}
+
+#quizScreen > *,
+.quiz-container > * {
     width: 100%;
-    max-width: 650px;
 }
 
 .quiz-top {
+    width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    font-size: 16px;
 }
 
 .player-name {
-    color: #c4a5ff;
+    color: #fff;
     font-weight: bold;
 }
 
 .score {
-    color: #ffd700;
+    color: #ffd21c;
     font-weight: bold;
 }
 
-/* التقدم */
+/* =========================
+   PROGRESS
+========================= */
 
 .progress-container {
     width: 100%;
     height: 8px;
-    background: #20202c;
+    background: #201b2b;
     border-radius: 20px;
     overflow: hidden;
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
 
 .progress-bar {
     height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #6c2cff, #b06cff);
-    transition: width 0.3s;
+    width: 0;
+    background: linear-gradient(90deg, #7b27ff, #d14cff);
+    border-radius: 20px;
+    transition: width .3s ease;
 }
 
-/* رقم السؤال والوقت */
+/* =========================
+   QUESTION INFO
+========================= */
 
 .question-info {
+    width: 100%;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    color: #999;
-    margin-bottom: 15px;
+    color: #aaa;
     font-size: 14px;
+    margin-bottom: 12px;
 }
 
 .timer {
-    color: #ffd700;
+    color: #ffd21c;
     font-weight: bold;
+    font-size: 18px;
 }
 
-/* السؤال */
+/* =========================
+   QUESTION
+========================= */
 
 .question-box {
-    background: #171722;
-    border: 1px solid #29293a;
-    border-radius: 20px;
-    padding: 25px 18px;
-    margin-bottom: 18px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    min-height: 125px;
+    padding: 24px 18px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    background: linear-gradient(145deg, #151326, #0e0c18);
+    border: 1px solid #4b3d68;
+    border-radius: 22px;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, .3),
+        inset 0 0 25px rgba(140, 60, 255, .04);
 }
 
 .question {
-    font-size: 23px;
+    width: 100%;
+    font-size: 24px;
     line-height: 1.6;
     font-weight: bold;
 }
 
 /* =========================
-   الإجابات
+   ANSWERS
 ========================= */
 
 .answers {
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 11px;
 }
 
 .answer-btn {
-    min-height: 65px;
+    width: 100%;
+    min-height: 70px;
     padding: 12px;
-    border-radius: 15px;
-    background: #1a1a27;
-    border: 1px solid #303044;
-    color: #fff;
-    font-size: 16px;
+    border-radius: 16px;
+
+    color: white;
+    background: linear-gradient(145deg, #1b1828, #12101c);
+    border: 1px solid #514669;
+
+    font-size: 17px;
     font-weight: bold;
-    transition: 0.2s;
+
+    transition: .2s;
 }
 
 .answer-btn:hover {
-    border-color: #8b5cf6;
-    background: #241d35;
+    border-color: #a43cff;
+    background: #211932;
 }
 
 .answer-btn:active {
-    transform: scale(0.97);
+    transform: scale(.97);
 }
 
 .answer-btn.correct {
-    background: #147a4b !important;
-    border-color: #20c77a !important;
+    background: #087b3e !important;
+    border-color: #23e978 !important;
+    box-shadow: 0 0 20px rgba(35, 233, 120, .3);
 }
 
 .answer-btn.wrong {
-    background: #8b2028 !important;
-    border-color: #ff4d5d !important;
+    background: #8b1725 !important;
+    border-color: #ff4e62 !important;
 }
 
 /* =========================
-   زر التالي
+   NEXT BUTTON
 ========================= */
 
 .next-btn {
     width: 100%;
-    margin-top: 16px;
-    padding: 16px;
-    border-radius: 14px;
-    background: #ffd700;
-    color: #111;
-    font-size: 18px;
-    font-weight: 900;
-    display: none;
+    min-height: 58px;
+    margin-top: 15px;
+
+    border-radius: 16px;
+
+    background: linear-gradient(135deg, #7628ff, #a83dff);
+    border: 1px solid #c16cff;
+
+    color: white;
+    font-size: 19px;
+    font-weight: bold;
+
+    box-shadow: 0 8px 25px rgba(126, 45, 255, .3);
+
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition: .25s;
 }
 
-.next-btn.show {
-    display: block;
+.next-btn.show,
+.next-btn[style*="block"] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.next-btn:hover {
+    transform: translateY(-2px);
 }
 
 /* =========================
-   شاشة تسليم الموبايل
+   PASS SCREEN
 ========================= */
 
 .pass-box {
-    width: 100%;
-    max-width: 500px;
-    background: #171722;
-    border: 1px solid #29293a;
+    text-align: center;
+    background: #12101c;
+    border: 1px solid #4b3d68;
     border-radius: 25px;
     padding: 35px 20px;
-    text-align: center;
 }
 
 .pass-icon {
@@ -328,78 +399,56 @@ button {
 
 .pass-title {
     font-size: 30px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .pass-text {
     color: #aaa;
-    line-height: 1.7;
+    line-height: 1.8;
     margin-bottom: 25px;
 }
 
 /* =========================
-   النتيجة
+   RESULT
 ========================= */
 
 .result-box {
-    width: 100%;
-    max-width: 550px;
-    background: #171722;
-    border: 1px solid #29293a;
-    border-radius: 25px;
-    padding: 35px 20px;
     text-align: center;
+    background: #12101c;
+    border: 1px solid #4b3d68;
+    border-radius: 25px;
+    padding: 30px 20px;
 }
 
 .winner {
     font-size: 32px;
-    color: #ffd700;
+    color: #ffd21c;
     margin-bottom: 20px;
 }
 
 .final-score {
-    font-size: 20px;
     color: #ddd;
-    margin-bottom: 25px;
+    font-size: 20px;
     line-height: 2;
+    margin-bottom: 25px;
 }
 
 /* =========================
-   تأثيرات بسيطة
-========================= */
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.screen:not(.hidden) {
-    animation: fadeIn 0.3s ease;
-}
-
-/* =========================
-   الموبايل
+   MOBILE
 ========================= */
 
 @media (max-width: 500px) {
 
     .screen {
-        padding: 15px;
+        padding: 18px 12px;
     }
 
     .game-logo {
-        font-size: 43px;
+        font-size: 45px;
     }
 
     .game-subtitle {
-        font-size: 15px;
+        font-size: 14px;
         margin-bottom: 25px;
     }
 
@@ -407,48 +456,43 @@ button {
         font-size: 25px;
     }
 
-    .categories {
-        gap: 9px;
-    }
-
     .category-btn {
-        min-height: 85px;
+        min-height: 88px;
         font-size: 15px;
-        border-radius: 15px;
-    }
-
-    .question-box {
-        padding: 20px 14px;
     }
 
     .question {
         font-size: 20px;
     }
 
-    .answers {
-        gap: 9px;
+    .question-box {
+        min-height: 115px;
+        padding: 20px 13px;
     }
 
     .answer-btn {
-        min-height: 60px;
-        font-size: 14px;
+        min-height: 62px;
+        font-size: 15px;
     }
 
-    .winner {
-        font-size: 27px;
+    .next-btn {
+        min-height: 55px;
+        font-size: 17px;
     }
 }
 
-/* شاشات صغيرة جدًا */
+/* =========================
+   SMALL PHONES
+========================= */
 
 @media (max-width: 350px) {
 
     .game-logo {
-        font-size: 36px;
+        font-size: 38px;
     }
 
     .categories {
-        grid-template-columns: 1fr 1fr;
+        gap: 8px;
     }
 
     .category-btn {
@@ -458,5 +502,10 @@ button {
 
     .question {
         font-size: 18px;
+    }
+
+    .answer-btn {
+        min-height: 58px;
+        font-size: 13px;
     }
 }
